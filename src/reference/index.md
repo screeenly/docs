@@ -8,25 +8,20 @@ This page contains the Open API specification for the screeenly API. Checkout al
 
 Feel free to explore the API documentation below. If you have a valid API key, you can also try out the API directly from this page.
 
-<script setup>
-import { computed } from 'vue';
-import { useData } from 'vitepress';
+<script setup async>
 import { ApiReference } from '@scalar/api-reference';
 import '@scalar/api-reference/style.css';
 
-const { isDark } = useData();
-
-const configuration = computed(function () {
-return {
+const configuration = {
     spec: {
-        url: '/assets/screeenly-api.yaml',
+        // url: '/assets/screeenly-api.yaml',
+        url: 'https://3.screeenly.com/screeenly-api.yaml',
     },
     searchHotKey: 'l',
     withDefaultFonts: false,
-    theme: isDark.value ? 'moon' : 'default',
+    theme: 'default',
+    proxy: 'https://proxy.scalar.com',
 };
-
-});
 </script>
 
 <div style="position: relative;">
