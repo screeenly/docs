@@ -2,7 +2,7 @@ import {defineConfig} from 'vitepress'
 
 // https://vitepress.dev/reference/site-config
 export default defineConfig({
-    title: "screeenly Docs",
+    title: "screeenly docs",
     description: "The knowledge base and documentation for screeenly v3.",
     srcExclude: ['**/README.md', '**/package.json', '**/package-lock.json'],
 
