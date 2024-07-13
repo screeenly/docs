@@ -17,7 +17,7 @@ export default defineConfig({
 
         // https://vitepress.dev/reference/default-theme-config
         logo: {
-            src: '/assets/screeenly-3-logo.svg',
+            src: '/screeenly-3-logo.svg',
             alt: 'screeenly Logo',
         },
 
