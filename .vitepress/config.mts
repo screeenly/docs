@@ -2,23 +2,24 @@ import {defineConfig} from 'vitepress'
 
 // https://vitepress.dev/reference/site-config
 export default defineConfig({
-
-    srcDir: './src/',
-
     title: "screeenly Docs",
     description: "The knowledge base and documentation for screeenly v3.",
+    srcExclude: ['**/README.md', '**/package.json', '**/package-lock.json'],
 
     cleanUrls: true,
 
+    head: [
+        ['link', {rel: 'icon', href: '/favicon.ico'}]
+    ],
+
+
     themeConfig: {
+
         // https://vitepress.dev/reference/default-theme-config
         logo: {
             src: '/assets/screeenly-3-logo.svg',
             alt: 'screeenly Logo',
         },
-        head: [
-            ['link', {rel: 'icon', href: '/favicon.ico'}]
-        ],
 
         editLink: {
             pattern: 'https://github.com/screeenly/docs/edit/main/:path'
