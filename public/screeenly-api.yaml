@@ -73,7 +73,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/BrowsershotRequest'
+              $ref: '#/components/schemas/HtmlBrowsershotRequest'
         required: true
       responses:
         '201':
@@ -378,6 +378,93 @@ components:
             - screen
             - print
           default: screen
+        ignore_https_errors:
+          type: boolean
+          default: false
+          description: Set to true, to ignore errors related to HTTPS/SSL certificates
+        http_headers:
+          type: array
+          description: Array of HTTP headers passed to the browser
+          items:
+            type: object
+            properties:
+              key:
+                type: string
+                example: 'X-My-Header'
+              value:
+                type: string
+                example: 'My Value'
+        cookies:
+          type: array
+          description: Array of cookies passed to the browser
+          items:
+            type: object
+            properties:
+              key:
+                type: string
+                example: 'my_cookie'
+              value:
+                type: string
+                example: 'my_value'
+              domain:
+                type: string
+                example: 'example.com'
+        basic_authentication_username:
+          type: string
+          description: The username which should be used for the Basic Authentication
+        basic_authentication_password:
+          type: string
+          description: The password which should be used for the Basic Authentication
+    HtmlBrowsershotRequest:
+      type: object
+
+      required:
+        - url
+      properties:
+        url:
+          type: string
+          example: 'https://www.google.com'
+          description: The URL must be accessible to screeenly servers
+        html:
+          type: string
+          description: Required, if URL is not set
+        window_width:
+          type: number
+          minimum: 1
+          maximum: 10000
+        window_height:
+          type: number
+          minimum: 1
+          maximum: 10000
+        timeout:
+          type: integer
+          default: 10
+        delay:
+          type: integer
+          minimum: 0
+          maximum: 30000
+          default: 0
+          description: Delay in milliseconds before the browser is capturing the screenshot
+        dismiss_dialogs:
+          type: boolean
+          default: false
+          description: Set to true, to automatically close popups, alerts or confirmation dialogs generated through JavaScript
+        disable_javascript:
+          type: boolean
+          default: false
+          description: Set to true, to disable JavaScript in the browser.
+        wait_until_network_idle_strict:
+          type: boolean
+          default: false
+          description: Set to true, to allow up to 2 network connections in the 500ms period. This setting is useful, if the website regularly pings and endpoint with XHR.
+        disable_web_security:
+          type: boolean
+          default: false
+          description: Set to true, to disable [CORS](https://developer.mozilla.org/en-US/docs/Web/HTTP/CORS) checks in the browser
+        browser_language:
+          type: string
+          default: 'en-GB'
+          description: Must be a valid ISO 639-1 language code.
         ignore_https_errors:
           type: boolean
           default: false
