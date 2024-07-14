@@ -14,8 +14,8 @@ import '@scalar/api-reference/style.css';
 
 const configuration = {
     spec: {
-        // url: '/assets/screeenly-api.yaml',
-        url: 'https://3.screeenly.com/screeenly-api.yaml',
+        url: '/screeenly-api.yaml',
+        // url: 'https://3.screeenly.com/screeenly-api.yaml',
     },
     searchHotKey: 'l',
     withDefaultFonts: false,
