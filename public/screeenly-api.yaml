@@ -239,6 +239,7 @@ components:
           enum:
             - jpg
             - png
+            - webp
             - pdf
         window_width:
           type: number
