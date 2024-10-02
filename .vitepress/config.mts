@@ -77,7 +77,13 @@ export default defineConfig({
                                     {text: 'Rendered HTML', link: 'api/available-endpoints/rendered-html.md'},
                                 ],
                             },
-
+                            {
+                                text: 'Available API Endpoints (new)',
+                                items: [
+                                    {text: 'Shots (Screenshots and PDFs)', link: 'api/available-endpoints-new/shots.md'},
+                                    {text: 'Rendered HTML', link: 'api/available-endpoints-new/rendered-html.md'},
+                                ],
+                            },
                         ],
                     },
                     {
