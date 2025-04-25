@@ -56,7 +56,8 @@ To create a PDF from a given URL, you can use the following payload.
 ```json
 {
     "url": "https://en.wikipedia.org/wiki/Special:Random",
-    "file_type": "pdf"
+    "file_type": "pdf",
+    "paper_format": "A4"
 }
 ```
 
@@ -67,7 +68,8 @@ To create a PDF from a given HTML snippet, you can use the following payload.
 ```json
 {
     "html": "<html><head></head><body><h1>Hello World</h1></body></html>",
-    "file_type": "pdf"
+    "file_type": "pdf",
+    "paper_format": "A4"
 }
 ```
 
