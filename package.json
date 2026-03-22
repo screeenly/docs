@@ -12,6 +12,6 @@
     "docs:preview": "vitepress preview"
   },
   "dependencies": {
-    "@scalar/api-reference": "^1.24.39"
+    "@scalar/api-reference": "^1.49.3"
   }
 }
