@@ -8,6 +8,12 @@ export default defineConfig({
 
     cleanUrls: true,
 
+    vite: {
+        ssr: {
+            noExternal: ['@scalar/api-reference'],
+        },
+    },
+
     head: [
         ['link', {rel: 'icon', href: '/favicon.ico'}]
     ],

@@ -13,14 +13,15 @@ import { ApiReference } from '@scalar/api-reference';
 import '@scalar/api-reference/style.css';
 
 const configuration = {
-    spec: {
-        url: '/screeenly-api.yaml',
-        // url: 'https://3.screeenly.com/screeenly-api.yaml',
-    },
+    url: '/screeenly-api.yaml',
     searchHotKey: 'l',
-    withDefaultFonts: false,
+    withDefaultFonts: true,
+    defaultOpenAllTags: true,
     theme: 'default',
-    proxy: 'https://proxy.scalar.com',
+    proxyUrl: 'https://proxy.scalar.com',
+    layout: "modern",
+    showSidebar: false,
+    hideDarkModeToggle: true,
 };
 </script>
 
