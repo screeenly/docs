@@ -4,9 +4,17 @@ import {defineConfig} from 'vitepress'
 export default defineConfig({
     title: "screeenly docs",
     description: "The knowledge base and documentation for screeenly v3.",
-    srcExclude: ['**/README.md', '**/package.json', '**/package-lock.json'],
+    srcExclude: ['**/README.md', '**/CLAUDE.md', '**/package.json', '**/package-lock.json'],
 
     cleanUrls: true,
+
+    // The app has no dark mode yet, and tokens.css has no dark values.
+    appearance: false,
+
+    markdown: {
+        // Code blocks are dark in the app, so use a dark theme in light mode too.
+        theme: 'github-dark',
+    },
 
     vite: {
         ssr: {
@@ -24,18 +32,32 @@ export default defineConfig({
         // https://vitepress.dev/reference/default-theme-config
         logo: {
             src: '/screeenly-3-logo.svg',
-            alt: 'screeenly Logo',
+            alt: '',
         },
+
+        siteTitle: 'screeenly',
 
         editLink: {
             pattern: 'https://github.com/screeenly/docs/edit/main/:path'
         },
 
+        // Same links as the nav on 3.screeenly.com (resources/views/components/ui/nav.blade.php in screeenly-3).
         nav: [
-            {text: 'Guide', link: '/guide/general/what-is-screeenly'},
-            {text: 'Reference', link: '/reference/'},
-            {text: '3.screeenly.com', link: 'https://3.screeenly.com/'},
-            {text: 'Status', link: 'https://status.3.screeenly.com/'},
+            {
+                text: 'Product',
+                items: [
+                    {text: 'Screenshots', link: 'https://3.screeenly.com/features/screenshots', target: '_self', noIcon: true},
+                    {text: 'PDFs', link: 'https://3.screeenly.com/features/pdf', target: '_self', noIcon: true},
+                    {text: 'Your own HTML', link: 'https://3.screeenly.com/features/your-own-html', target: '_self', noIcon: true},
+                    {text: 'Rendered HTML', link: 'https://3.screeenly.com/features/rendered-html', target: '_self', noIcon: true},
+                    {text: 'MCP for agents', link: 'https://3.screeenly.com/features/mcp', target: '_self', noIcon: true},
+                ],
+            },
+            {text: 'Pricing', link: 'https://3.screeenly.com/pricing', target: '_self', noIcon: true},
+            {text: 'Docs', link: '/guide/general/what-is-screeenly', activeMatch: '^/(guide|reference)/'},
+            {text: 'Changelog', link: 'https://3.screeenly.com/blog?category=Changelog', target: '_self', noIcon: true},
+            {text: 'Blog', link: 'https://3.screeenly.com/blog', target: '_self', noIcon: true},
+            {text: 'Status', link: 'https://status.3.screeenly.com/', noIcon: true},
         ],
 
         sidebar: {
@@ -94,6 +116,13 @@ export default defineConfig({
                             {text: 'Create Full Page Screenshots', link: 'cookbook/create-full-page-screenshots'},
                             {text: 'Print Headers and Footers in PDFs', link: 'cookbook/print-headers-and-footers-in-pdfs'},
                         ]
+                    },
+                    {
+                        text: 'Reference',
+                        base: '/',
+                        items: [
+                            {text: 'API reference', link: 'reference/'},
+                        ],
                     },
                     {
                         text: 'FAQ',
