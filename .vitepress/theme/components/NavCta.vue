@@ -5,7 +5,7 @@ defineProps<{ stacked?: boolean }>();
 <template>
     <div class="nav-cta" :class="{ stacked }">
         <a class="nav-cta-signin" href="https://3.screeenly.com/app/login">Sign in</a>
-        <a class="nav-cta-trial" href="https://3.screeenly.com/app/register">Start free trial</a>
+        <a class="nav-cta-start" href="https://3.screeenly.com/app/register">Start for free</a>
     </div>
 </template>
 
@@ -55,7 +55,7 @@ defineProps<{ stacked?: boolean }>();
     font-weight: 500;
 }
 
-.nav-cta-trial {
+.nav-cta-start {
     border-radius: 0.5rem;
     padding: 0.375rem 0.625rem;
     background-color: var(--color-ink);
@@ -65,7 +65,7 @@ defineProps<{ stacked?: boolean }>();
     transition: background-color 0.15s;
 }
 
-.nav-cta-trial:hover {
+.nav-cta-start:hover {
     background-color: var(--color-zinc-700);
 }
 </style>

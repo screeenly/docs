@@ -5,5 +5,6 @@ The API is the core product of screeenly. It allows you to easily generate scree
 On the following pages you will learn:
 
 * What the monthly API usage is and how it is calculated
+* How credits pay for requests once your monthly requests are used up
 * How you can can create API tokens to authenticate with the API
 * How to make API calls to generate screenshots, PDFs or get rendered HTML

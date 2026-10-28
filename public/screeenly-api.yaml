@@ -43,6 +43,8 @@ paths:
               $ref: '#/components/headers/X-Usage-Usage'
             X-Usage-Remaining:
               $ref: '#/components/headers/X-Usage-Remaining'
+            X-Credits-Remaining:
+              $ref: '#/components/headers/X-Credits-Remaining'
             X-Ratelimit-Limit:
               $ref: '#/components/headers/X-Ratelimit-Limit'
             X-Ratelimit-Remaining:
@@ -85,6 +87,8 @@ paths:
               $ref: '#/components/headers/X-Usage-Usage'
             X-Usage-Remaining:
               $ref: '#/components/headers/X-Usage-Remaining'
+            X-Credits-Remaining:
+              $ref: '#/components/headers/X-Credits-Remaining'
             X-Ratelimit-Limit:
               $ref: '#/components/headers/X-Ratelimit-Limit'
             X-Ratelimit-Remaining:
@@ -112,20 +116,25 @@ components:
       bearerFormat: JWT
   headers:
     X-Usage-Limit:
-      description: The usage limit of the user
+      description: The monthly request limit of the user (100 free requests plus the requests of their plan).
       schema:
         type: integer
-        example: 1000
+        example: 2100
     X-Usage-Usage:
       description: The usage of the user
       schema:
         type: integer
         example: 15
     X-Usage-Remaining:
-      description: The remaining usage of the user
+      description: The requests the user has left this month.
       schema:
         type: integer
-        example: 985
+        example: 2085
+    X-Credits-Remaining:
+      description: The credit balance of the user. Credits pay for requests once the monthly requests are used up.
+      schema:
+        type: integer
+        example: 500
     X-Ratelimit-Limit:
       description: The maximum number of request the user can make in a minute.
       schema:
@@ -157,7 +166,7 @@ components:
             properties:
               message:
                 type: string
-                example: 'Access denied. Your trial has expired and you did not subscribe to a plan. Subscribe to a plan here: https://3.screeenly.com/billing/subscriptions.'
+                example: 'The monthly API usage limit has been reached (100 out of 100 requests) and there are no credits left. Upgrade your plan or buy credits under https://3.screeenly.com/app/billing/credits. The limit resets at the start of next month.'
     TooManyAttemptsException:
       description: Response when the user has reached the rate limit.
       headers:

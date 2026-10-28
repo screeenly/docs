@@ -8,6 +8,13 @@ description: All notable changes we've made to screeenly since its relaunch.
 The latest major or minor release has been a while, but we regularly upgrade underlying systems to their latest versions.
 :::
 
+## Free plan and credits
+
+* Every account gets 100 free requests per month, with or without a plan. Plans add their requests on top. The 14-day trial is gone.
+* Buy [credits](/guide/api/introduction/credits) for requests above your monthly limit. Credits don't expire.
+* Requests that fail validation (`422`) no longer count toward your monthly usage.
+* API responses include the new `X-Credits-Remaining` header.
+
 ## v3.0.0 - 2020-09-10
 
 Public release of screeenly v3. Key features include:

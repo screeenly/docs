@@ -18,8 +18,7 @@ Common errors are
 
 * Validation error
 * Rate Limit reached
-* Usage Limit reached
-* Trial expired
+* Usage limit reached and no credits left
 
 ## 401 - Unauthenticated
 
@@ -37,12 +36,13 @@ You can create a new API token in the application dashboard.
 
 You can receive a `403`-error from the API for the following reasons:
 
-* You've reached your monthly API usage limit. You can upgrade your plan if you need more API requests.
-* Your trial as expired. Upgrade your account to regain access to the API
+* You've used up your monthly requests and have no credits left. Upgrade your plan or [buy credits](/guide/api/introduction/credits) if you need more requests.
+* Your account has been blocked.
+* Your email address is not verified.
 
 ```json
 {
-    "message": "Access denied. Your trial has expired and you did not subscribe to a plan. Subscribe to a plan here: https://3.screeenly.com/billing/subscriptions."
+    "message": "The monthly API usage limit has been reached (100 out of 100 requests) and there are no credits left. Upgrade your plan or buy credits under https://3.screeenly.com/app/billing/credits. The limit resets at the start of next month."
 }
 ```
 
@@ -57,6 +57,8 @@ If you would like to know more information why access to a domain has been block
 
 If you're receiving a `422`-error from the API, the request you made did not pass our validation.   
 The response should contain clear instructions on how to fix the validation errors.
+
+Requests that fail validation don't count toward your monthly usage and don't use credits.
 
 ```json
 {

@@ -92,6 +92,7 @@ export default defineConfig({
                                         text: 'Monthly API Usage and Limit',
                                         link: 'api/introduction/monthly-usage-limit.md'
                                     },
+                                    {text: 'Credits', link: 'api/introduction/credits.md'},
                                     {text: 'Rate Limit', link: 'api/introduction/rate-limit.md'},
                                     {text: 'Request Errors', link: 'api/introduction/request-errors.md'},
                                     {text: 'Test Requests', link: 'api/introduction/test-requests.md'},
@@ -132,7 +133,6 @@ export default defineConfig({
                                 text: 'How long are images stored on screenly servers?',
                                 link: 'faq/how-long-are-images-stored-on-screeenly-servers'
                             },
-                            {text: 'Can I extend my trial?', link: 'faq/can-i-extend-my-trial'},
                             {
                                 text: 'Which data of my API request is stored or logged?',
                                 link: 'faq/which-data-of-my-api-request-is-stored-or-logged'
