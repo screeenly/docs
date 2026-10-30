@@ -21,6 +21,16 @@ Common errors are
 * Usage Limit reached
 * Trial expired
 
+## 400 - Invalid Request ID
+
+The `X-Request-ID` header must be 1 to 255 printable ASCII characters without spaces. See [Request IDs](/guide/api/introduction/request-ids).
+
+```json
+{
+    "message": "The X-Request-ID header must be 1 to 255 printable ASCII characters without spaces."
+}
+```
+
 ## 401 - Unauthenticated
 
 If you're receiving a `401`-error from the API, you did not provide a valid API token or the given token is no longer valid.
@@ -53,6 +63,16 @@ If you're receiving a `4xx`-error from the API the domain owner has requested us
 If you would like to know more information why access to a domain has been blocked, please [contact us](mailto:support@screeenly.com).
 
 
+## 409 - Request ID In Use
+
+A request with the same `X-Request-ID` is still running. Wait for its response before you send the request again.
+
+```json
+{
+    "message": "A request with this X-Request-ID is still running. Wait for its response before you send it again."
+}
+```
+
 ## 422 - Validation Failed
 
 If you're receiving a `422`-error from the API, the request you made did not pass our validation.   
@@ -72,6 +92,14 @@ The response should contain clear instructions on how to fix the validation erro
 }
 ```
 
+A `422` is also returned when you reuse an `X-Request-ID` for a different request within 60 minutes:
+
+```json
+{
+    "message": "This X-Request-ID was already used for a different request. Use a new ID for every new request."
+}
+```
+
 ## 429 - Too Many Attempts
 
 If you're receiving a `429`-error from the API, you made to many requests into a short amount of time and exceeded the rate limit.
@@ -87,7 +115,7 @@ You can check the `retry-after`, `x-ratelimit-limit`, `x-ratelimit-reset`, `x-ra
 
 ## 500 - Server Error
 
-If you're receiving a `500` error, an error has occoured on our end. You can gracefully retry your request.
+If you're receiving a `500` error, an error has occoured on our end. You can retry your request with the same `X-Request-ID`.
 
 ```json
 {
