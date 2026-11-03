@@ -17,7 +17,7 @@ Requires Node 24+ and npm 11+ (see `.nvmrc` and `package.json` engines).
 ## Architecture
 
 - **VitePress config**: `.vitepress/config.mts` - site config, nav, and sidebar structure
-- **Content**: Markdown files in `guide/` (organized into `general/`, `quick-start/`, `api/`, `cookbook/`, `faq/`) and `reference/`
+- **Content**: Markdown files in `guide/` (organized into `general/`, `quick-start/`, `api/`, `mcp/`, `cookbook/`, `faq/`) and `reference/`
 - **API Reference**: `reference/index.md` uses `@scalar/api-reference` to render `public/screeenly-api.yaml` (OpenAPI spec)
 - **Static assets**: `public/` (favicon, logo, OpenAPI spec), `assets/` (images used in docs)
 - **Deployment**: GitHub Pages via `.github/workflows/deploy.yml`, triggered on push to `main`
@@ -33,7 +33,8 @@ Requires Node 24+ and npm 11+ (see `.nvmrc` and `package.json` engines).
 - `.vitepress/theme/` extends the VitePress default theme so the site looks like 3.screeenly.com.
 - `tokens.css` is generated from `screeenly-3/resources/css/design/tokens.css`. Don't edit it. Run `npm run sync:design` after design changes in the app (set `SCREEENLY_APP_PATH` if the app repo is not at `../screeenly-3`). The script also copies the logo.
 - `custom.css` maps the tokens onto VitePress's `--vp-*` variables. Use the token variables (`--color-ink`, `--color-purple`, ...) instead of hex values.
-- The header links (`nav` in `config.mts`), `components/NavCta.vue` and `components/SiteFooter.vue` are hand-written copies of `nav.blade.php` and `footer.blade.php` in the app. Update them by hand when the app's menus change.
+- The header (`nav` in `config.mts`) only links to the guides, the API reference, the playground and back to 3.screeenly.com. `components/NavCta.vue` adds the sign in and sign up buttons.
+- `components/SiteFooter.vue` is a shorter version of `footer.blade.php` in the app: the logo, the status page and the legal pages. Update the legal links by hand when they change in the app.
 - Dark mode is off (`appearance: false`) until the app has one.
 
 ## Writing docs
@@ -160,4 +161,11 @@ Use `::: tip`, `::: info`, `::: warning` and `::: danger` sparingly. They render
 
 ### OpenAPI spec
 
-`public/screeenly-api.yaml` is maintained by hand. When request options change in `screeenly-3/app/Http/Requests/CreateBrowsershotRequest.php`, update the spec and the guide pages that list those options.
+`public/screeenly-api.yaml` is maintained by hand. When request options change in `screeenly-3/app/Http/Requests/CreateBrowsershotRequest.php`, update the spec, `guide/api/available-endpoints/options.md` and the guide pages that mention those options.
+
+Limits and defaults come from these files in the app. Check them before you change a number in the docs:
+
+- `app/Domain/Browsershot/ScreenshotLimits.php`: option maxima and free plan limits
+- `app/Domain/Browsershot/PendingBrowsershot.php`: option defaults
+- `config/screeenly.php`: free monthly requests, cache TTLs, credit packs
+- `app/Providers/RateLimitServiceProvider.php`: requests per minute

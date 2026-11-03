@@ -41,23 +41,11 @@ export default defineConfig({
             pattern: 'https://github.com/screeenly/docs/edit/main/:path'
         },
 
-        // Same links as the nav on 3.screeenly.com (resources/views/components/ui/nav.blade.php in screeenly-3).
         nav: [
-            {
-                text: 'Product',
-                items: [
-                    {text: 'Screenshots', link: 'https://3.screeenly.com/features/screenshots', target: '_self', noIcon: true},
-                    {text: 'PDFs', link: 'https://3.screeenly.com/features/pdf', target: '_self', noIcon: true},
-                    {text: 'Your own HTML', link: 'https://3.screeenly.com/features/your-own-html', target: '_self', noIcon: true},
-                    {text: 'Rendered HTML', link: 'https://3.screeenly.com/features/rendered-html', target: '_self', noIcon: true},
-                    {text: 'MCP for agents', link: 'https://3.screeenly.com/features/mcp', target: '_self', noIcon: true},
-                ],
-            },
-            {text: 'Pricing', link: 'https://3.screeenly.com/pricing', target: '_self', noIcon: true},
-            {text: 'Docs', link: '/guide/general/what-is-screeenly', activeMatch: '^/(guide|reference)/'},
-            {text: 'Changelog', link: 'https://3.screeenly.com/blog?category=Changelog', target: '_self', noIcon: true},
-            {text: 'Blog', link: 'https://3.screeenly.com/blog', target: '_self', noIcon: true},
-            {text: 'Status', link: 'https://status.3.screeenly.com/', noIcon: true},
+            {text: 'Guides', link: '/guide/general/what-is-screeenly', activeMatch: '^/guide/'},
+            {text: 'API reference', link: '/reference/', activeMatch: '^/reference/'},
+            {text: 'Playground', link: 'https://3.screeenly.com/app/playground', target: '_self', noIcon: true},
+            {text: 'Back to screeenly', link: 'https://3.screeenly.com', target: '_self', noIcon: true},
         ],
 
         sidebar: {
@@ -65,86 +53,63 @@ export default defineConfig({
                 base: '/guide/',
                 items: [
                     {
-                        text: 'Introduction',
-                        collapsed: false,
+                        text: 'Getting started',
                         items: [
-                            {text: 'What is screeenly?', link: 'general/what-is-screeenly.md'},
-                            {text: 'Changelog', link: 'general/changelog.md'},
-                            {text: 'Roadmap', link: 'general/roadmap.md'},
+                            {text: 'What is screeenly?', link: 'general/what-is-screeenly'},
+                            {text: 'Quickstart', link: 'quick-start/from-zero-to-hero'},
                         ]
                     },
                     {
-                        text: 'Quickstart',
+                        text: 'Using the API',
                         items: [
-                            {text: 'From Zero to Hero', link: 'quick-start/from-zero-to-hero.md'},
+                            {text: 'Making requests', link: 'api/introduction/'},
+                            {text: 'Authentication', link: 'api/introduction/authentication'},
+                            {text: 'Free plan', link: 'api/introduction/free-plan'},
+                            {text: 'Monthly usage and limit', link: 'api/introduction/monthly-usage-limit'},
+                            {text: 'Credits', link: 'api/introduction/credits'},
+                            {text: 'Rate limits', link: 'api/introduction/rate-limit'},
+                            {text: 'Caching', link: 'api/introduction/caching'},
+                            {text: 'Request IDs and retries', link: 'api/introduction/request-ids'},
+                            {text: 'Test requests', link: 'api/introduction/test-requests'},
+                            {text: 'Errors', link: 'api/introduction/request-errors'},
                         ]
                     },
                     {
-                        text: 'API',
-                        collapsed: false,
+                        text: 'Endpoints',
                         items: [
-                            {
-                                text: 'Introduction',
-                                items: [
-                                    {text: 'Introduction', link: 'api/introduction/'},
-                                    {text: 'Authentication', link: 'api/introduction/authentication.md'},
-                                    {
-                                        text: 'Monthly API Usage and Limit',
-                                        link: 'api/introduction/monthly-usage-limit.md'
-                                    },
-                                    {text: 'Credits', link: 'api/introduction/credits.md'},
-                                    {text: 'Rate Limit', link: 'api/introduction/rate-limit.md'},
-                                    {text: 'Request Errors', link: 'api/introduction/request-errors.md'},
-                                    {text: 'Test Requests', link: 'api/introduction/test-requests.md'},
-                                    {text: 'Request IDs', link: 'api/introduction/request-ids.md'},
-                                ]
-                            },
-                            {
-                                text: 'Available API Endpoints',
-                                items: [
-                                    {text: 'Shots (Screenshots and PDFs)', link: 'api/available-endpoints/shots.md'},
-                                    {text: 'Rendered HTML', link: 'api/available-endpoints/rendered-html.md'},
-                                ],
-                            },
-
+                            {text: 'Screenshots and PDFs', link: 'api/available-endpoints/shots'},
+                            {text: 'Rendered HTML', link: 'api/available-endpoints/rendered-html'},
+                            {text: 'All options', link: 'api/available-endpoints/options'},
+                        ],
+                    },
+                    {
+                        text: 'MCP server',
+                        items: [
+                            {text: 'Connect an AI agent', link: 'mcp/'},
                         ],
                     },
                     {
                         text: 'Cookbook',
-                        collapsed: false,
                         items: [
-                            {text: 'Generate Open Graph Images', link: 'cookbook/generate-open-graph-images'},
-                            {text: 'Create Full Page Screenshots', link: 'cookbook/create-full-page-screenshots'},
-                            {text: 'Print Headers and Footers in PDFs', link: 'cookbook/print-headers-and-footers-in-pdfs'},
+                            {text: 'Generate Open Graph images', link: 'cookbook/generate-open-graph-images'},
+                            {text: 'Full page and clipped screenshots', link: 'cookbook/create-full-page-screenshots'},
+                            {text: 'Headers and footers in PDFs', link: 'cookbook/print-headers-and-footers-in-pdfs'},
                         ]
                     },
                     {
-                        text: 'Reference',
-                        base: '/',
+                        text: 'Help',
                         items: [
-                            {text: 'API reference', link: 'reference/'},
-                        ],
+                            {text: 'Troubleshooting', link: 'faq/troubleshooting'},
+                            {text: 'How long are files stored?', link: 'faq/how-long-are-images-stored-on-screeenly-servers'},
+                            {text: 'Which data of my requests is stored?', link: 'faq/which-data-of-my-api-request-is-stored-or-logged'},
+                            {text: 'What is screeenly doing in my logs?', link: 'faq/why-is-screeenly-3-in-my-logs'},
+                            {text: 'What happened to the open source version?', link: 'faq/what-happend-to-the-open-source-version'},
+                        ]
                     },
                     {
-                        text: 'FAQ',
-                        collapsed: false,
+                        text: 'About',
                         items: [
-                            {
-                                text: 'How long are images stored on screenly servers?',
-                                link: 'faq/how-long-are-images-stored-on-screeenly-servers'
-                            },
-                            {
-                                text: 'Which data of my API request is stored or logged?',
-                                link: 'faq/which-data-of-my-api-request-is-stored-or-logged'
-                            },
-                            {
-                                text: 'What is screeenly 3.0 doing in my logs?',
-                                link: 'faq/why-is-screeenly-3-in-my-logs'
-                            },
-                            {
-                                text: 'What happend to the open source version?',
-                                link: 'faq/what-happend-to-the-open-source-version'
-                            },
+                            {text: 'Changelog', link: 'general/changelog'},
                         ]
                     },
                 ],
