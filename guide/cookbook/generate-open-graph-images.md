@@ -1,18 +1,16 @@
 ---
-description: Learn how to create an Open Graph Image with the screeenly API
+description: Design an Open Graph image in HTML and CSS and turn it into a JPG with the screeenly API.
 ---
 
-# Generate Open Graph Images
+# Generate Open Graph images
 
-screeenly can also be used to generate images from your own HTML code.
-
-In this example we're creating an Open Graph Image for an article for our imaginary blog.
+Send your own HTML to screeenly and get an image back. This example creates an Open Graph image for a blog post.
 
 ![This is the Open Graph Image we would like to create in this tutorial.](./../../assets/cookbook-open-graph-image.png)
 
-We're using the utility CSS framework [Tailwind CSS](https://tailwindcss.com/) to layout and design the image. The text in the image is set in [Inter](https://rsms.me/inter/).
+The layout uses [Tailwind CSS](https://tailwindcss.com/) and the font [Inter](https://rsms.me/inter/).
 
-The following is all the HTML code we need to create the image above. You can find an interactive example on [codepen.io](https://codepen.io/stefanzweifel/pen/MWyoEwN?editors=1000).&#x20;
+This HTML creates the image above. There's an interactive version on [CodePen](https://codepen.io/stefanzweifel/pen/MWyoEwN?editors=1000).
 
 ```html
 <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/1.7.0/tailwind.min.css">
@@ -35,32 +33,30 @@ The following is all the HTML code we need to create the image above. You can fi
 </section>
 ```
 
-You can also try this example out in [the playground](https://3.screeenly.com/playground). Import the following API payload and the hit "Run Playground" to generate the image.
+To try it in the [playground](https://3.screeenly.com/app/playground), click **Import payload** and paste this payload:
 
 ```json
 {
     "file_type": "jpg",
-    "window_width": "1200",
-    "window_height": "600",
+    "window_width": 1200,
+    "window_height": 600,
     "timeout": 10,
     "css_media_type": "screen",
     "html": "<link rel=\"stylesheet\" type=\"text\/css\" href=\"https:\/\/cdnjs.cloudflare.com\/ajax\/libs\/tailwindcss\/1.7.0\/tailwind.min.css\">\n<link rel=\"stylesheet\" type=\"text\/css\" href=\"https:\/\/rsms.me\/inter\/inter.css\">\n\n<style>\n#container {\n  font-family: 'Inter';\n  width: 1200px;\n  height: 600px;\n}\n<\/style>\n\n<section id=\"container\" class=\"flex flex-col justify-between p-12 bg-gray-900\">\n  <h2 class=\"text-2xl font-bold leading-10 tracking-tight text-gray-100\">example.com<\/h2>\n  <h1 class=\"text-6xl font-extrabold tracking-tight text-gray-100\">The Title of your Article<\/h1>\n  <footer class=\"text-gray-300 text-xl font-medium\">\n    5 min read\n  <\/footer>\n<\/section>",
-    "delay": "1000"
+    "delay": 1000
 }
 ```
 
-***
 
-By using Tailwind's flexbox utility classes we can position the name of our website, the title of the article and the reading time nicely on the image. We've also written some basic CSS to set the `font-family` to Inter and define a width and height for the image.
+Tailwind's flexbox classes position the site name, the title and the reading time. The CSS sets the font to Inter and the size of the image.
 
-The API request to screeenly would look like this:
+The API request:
 
 ```shell
 curl --request POST \
   --url https://3.screeenly.com/api/v1/shots \
-  --header 'accept: application/json' \
-  --header 'authorization: Bearer <token>' \
-  --header 'content-type: application/x-www-form-urlencoded' \
+  --header 'Accept: application/json' \
+  --header 'Authorization: Bearer YOUR_API_TOKEN' \
   --data 'html=<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/1.7.0/tailwind.min.css">
 <link rel="stylesheet" type="text/css" href="https://rsms.me/inter/inter.css">
 
@@ -85,8 +81,12 @@ curl --request POST \
   --data delay=1000
 ```
 
-Notice the `window_height` and `window_width` parameters. They equal the values in the `<style>`-tag in our HTML code. This ensure that our image will have the expected dimensions.
+`window_width` and `window_height` match the size in the `<style>` tag, so the image is exactly 1200 × 600 pixels.
 
-The `delay` parameter is set to 1000 milliseconds to ensure that the external assests for Tailwind CSS and Inter are loaded and parsed by the browser.
+`delay` waits 1,000 ms so the stylesheet and the font finish loading. `wait_until_network_idle: true` works too and doesn't wait longer than needed.
 
-Again, if you would like to see an interactive example, check out [the playground](https://3.screeenly.com/playground).
+## Use the image
+
+Download the file from `shot_url` and store it with your post. Don't use `shot_url` in your `og:image` tag: the file is deleted after 24 hours.
+
+The same HTML returns the same image for 24 hours from the [cache](/guide/api/introduction/caching), without counting toward your usage.

@@ -1,41 +1,93 @@
 ---
-description: >-
-  You need a valid API token to interact with our API. On this page you will
-  learn how to create API tokens and how to use them in API requests.
+description: How to create an API token, send it with your requests and revoke it.
 ---
 
 # Authentication
 
-You need a valid API token to interact with our API. On this page you will learn how to create API tokens and how to use them in API requests.
+Every API request needs an API token. You send it as a Bearer token in the `Authorization` header.
 
-## Create a new Token
+## Create a token
 
-You can create new API tokens on the [application dashboard](https://3.screeenly.com/home). Name your API token appropriately so you can easly recognize them later.
+1. [Sign up](https://3.screeenly.com/app/register) and verify your email address. Requests from accounts without a verified email address return a `403` error.
+2. Open [API Tokens](https://3.screeenly.com/app/api-tokens) in the app and click **Create Token**.
+3. Give the token a name, for example the name of the app that uses it.
+4. Pick the abilities. Keep the default, `shot:create`, for API requests.
+5. Copy the token. It is shown only once.
 
-The API token will be shown to you **only once**. Make sure to store it in a safe place.
+| Ability | Allows |
+| --- | --- |
+| `shot:create` | Creating screenshots, PDFs and rendered HTML. Includes `shot:read`. |
+| `shot:read` | Listing your captures and reading your usage through the [MCP server](/guide/mcp/). Can't create captures. |
 
-## Authenticate against the API
+A token without `shot:create` gets a `403` error from the API.
 
-You can now use the received token as a Bearer token in the `Authorization` HTTP header in your requests.
+Create one token per app or environment. Then you can revoke one without breaking the others, and the request log shows which app sent a request.
+
+## Send the token
 
 ```text
-Authorization: Bearer <token>
+Authorization: Bearer YOUR_API_TOKEN
 ```
 
-Here is a cURL example to create a screenshot of a random wikipedia page.
+::: code-group
 
-```text
+```bash [curl]
 curl --request POST \
-  --url https://screeenly-3.test/api/v1/shots \
-  --header 'accept: application/json' \
-  --header 'authorization: Bearer <token>' \
-  --header 'content-type: application/x-www-form-urlencoded' \
-  --data url=https://en.wikipedia.org/wiki/Special:Random \
-  --data window_width=1440 \
-  --data full_page=1
+  --url https://3.screeenly.com/api/v1/shots \
+  --header 'Accept: application/json' \
+  --header 'Authorization: Bearer YOUR_API_TOKEN' \
+  --data url=https://example.com
 ```
 
-## Revoke existing token
+```php [PHP]
+use Illuminate\Support\Facades\Http;
 
-You can revoke an existing API token by clicking on the _Delete_ button next to the API token on the dashboard.
+$response = Http::withToken('YOUR_API_TOKEN')
+    ->acceptJson()
+    ->post('https://3.screeenly.com/api/v1/shots', [
+        'url' => 'https://example.com',
+    ]);
+```
 
+```js [JavaScript]
+const response = await fetch('https://3.screeenly.com/api/v1/shots', {
+    method: 'POST',
+    headers: {
+        Accept: 'application/json',
+        Authorization: 'Bearer YOUR_API_TOKEN',
+        'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({ url: 'https://example.com' }),
+});
+```
+
+```python [Python]
+import requests
+
+response = requests.post(
+    "https://3.screeenly.com/api/v1/shots",
+    headers={"Accept": "application/json", "Authorization": "Bearer YOUR_API_TOKEN"},
+    json={"url": "https://example.com"},
+)
+```
+
+:::
+
+Keep the token out of your code repository. Store it in an environment variable or your secret manager. Don't call the API from a browser or a mobile app, because anyone could read the token from there.
+
+A missing or invalid token returns a `401` error:
+
+```json
+{
+    "message": "Unauthenticated."
+}
+```
+
+## Revoke a token
+
+Delete the token on the [API Tokens](https://3.screeenly.com/app/api-tokens) page. Requests with that token fail with a `401` error right away.
+
+## Related
+
+- [Making requests](/guide/api/introduction/)
+- [Errors](/guide/api/introduction/request-errors)

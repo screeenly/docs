@@ -4,9 +4,9 @@ aside: false
 
 # Reference
 
-This page contains the Open API specification for the screeenly API. Checkout all available endpoints and learn what options they support.
+Every endpoint, option and response of the screeenly API, from the OpenAPI spec. Paste your API token to send requests from this page.
 
-Feel free to explore the API documentation below. If you have a valid API key, you can also try out the API directly from this page.
+The [guides](/guide/api/introduction/) explain how the API behaves: [free plan limits](/guide/api/introduction/free-plan), [caching](/guide/api/introduction/caching), [errors](/guide/api/introduction/request-errors) and [all options](/guide/api/available-endpoints/options) with their combinations.
 
 <script setup async>
 import { ApiReference } from '@scalar/api-reference';

@@ -12,7 +12,8 @@ Credits pay for API requests once your [monthly requests](/guide/api/introductio
 - Credits are only used after your monthly requests run out. Until then, your balance doesn't change.
 - Credits don't expire.
 - A request that fails validation (`422`) gives its credit back. Requests that fail while rendering or time out keep the credit, because the browser already ran.
-- [Test requests](/guide/api/introduction/test-requests) and runs in the playground never use credits.
+- [Test requests](/guide/api/introduction/test-requests), results from the [cache](/guide/api/introduction/caching) and runs in the playground never use credits.
+- While you have at least one credit, the [free plan](/guide/api/introduction/free-plan) limits don't apply, even before your 100 free requests are used up.
 
 When your monthly requests and your credits are both used up, the API returns a `403` error until the next month starts.
 
@@ -49,5 +50,6 @@ If a credit purchase is refunded, the credits you haven't used yet are removed f
 
 ## Related
 
-- [Monthly API Usage and Limit](/guide/api/introduction/monthly-usage-limit)
-- [Request Errors](/guide/api/introduction/request-errors)
+- [Monthly usage and limit](/guide/api/introduction/monthly-usage-limit)
+- [Free plan](/guide/api/introduction/free-plan)
+- [Errors](/guide/api/introduction/request-errors)

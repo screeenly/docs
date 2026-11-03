@@ -1,19 +1,34 @@
+---
+description: What screeenly does and what you can build with it.
+---
+
 # What is screeenly?
 
-screeenly is a software as a service product \(SaaS\) which provides an API to interact with a real web browser through code.
+screeenly is an API that loads web pages in a real Chrome browser. You send a URL or your own HTML, and get back:
 
-Our API currently supports the following features:
+- a screenshot as PNG, JPG or WebP
+- a PDF
+- the HTML of the page after its JavaScript ran
 
-* Create a screenshot of a website
-* Generate a PDF of a website
-* Get the rendered HTML of a website
-* Create a screenshot or PDF of HTML code you send to the API
-* Get the rendered HTML of the HTML code you send to the API
+AI agents can use the same features through the [MCP server](/guide/mcp/).
 
-If this feature description isn't helpful to you, here are some example use cases, where screeenly can be benefitial for you:
+## What people build with it
 
-* You want to generate thumbnail images from a collection of URLs. For example, if you're running a bookmarking app.
-* You want to create an app which automatically converts websites into PDFs. For example cooking recipes or Wikipedia articles.
-* You want to build a price monitoring service for a website which uses a Single-Page-Application for it's store. A real browser needs to load the website in order to extract the product price.
-* You want to use HTML and CSS to layout an invoice. You can send the HTML and CSS source code to the API and we will return a PDF file to you.
+- Thumbnails of links, for example in a bookmarking app.
+- PDFs of articles, recipes or reports.
+- Invoices and documents designed in HTML and CSS, turned into PDFs.
+- [Open Graph images](/guide/cookbook/generate-open-graph-images) for blog posts.
+- Reading the content of single page apps, where a plain HTTP request only returns an empty page.
+- Screenshots of a page in a pull request or a ticket.
 
+## What it doesn't do
+
+- It doesn't get past bot protection, Cloudflare challenges or CAPTCHAs. If a normal browser sees a challenge, so does screeenly.
+- It can't load pages on `localhost` or in a private network. Send the HTML instead.
+- It doesn't host your files. Files are deleted after 24 hours.
+
+## Get started
+
+- [Quickstart](/guide/quick-start/from-zero-to-hero)
+- [Free plan](/guide/api/introduction/free-plan): 100 requests per month, no credit card.
+- [Pricing](https://3.screeenly.com/pricing)

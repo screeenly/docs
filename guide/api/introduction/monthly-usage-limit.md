@@ -2,13 +2,13 @@
 description: How many API requests you can make each month, which requests count, and what happens when you reach the limit.
 ---
 
-# Monthly API Usage and Limit
+# Monthly usage and limit
 
-Every account can make a number of API requests per calendar month. This page explains how the limit is calculated, which requests count, and what happens when you reach it.
+Every account can make a number of API requests per calendar month.
 
 ## Your monthly limit
 
-Every account gets **100 free requests per month**, with or without a plan. A plan adds its requests on top:
+Every account gets **100 free requests per month**, with or without a plan. A plan adds its requests on top. Accounts without a plan or credits also have lower option limits, see [Free plan](/guide/api/introduction/free-plan).
 
 | Plan | Requests per month |
 | --- | --- |
@@ -23,8 +23,11 @@ Screenshots, PDFs and rendered HTML all count the same: one request each.
 ## Which requests count
 
 - Requests that return a screenshot, PDF or rendered HTML count.
-- Requests that fail while rendering or time out also count, because the browser already ran.
-- Requests that fail validation (`422`) don't count.
+- Requests that fail while rendering or time out (`400`) also count, because the browser already ran.
+- Captures through the [MCP server](/guide/mcp/) count like API requests.
+- Results from the [cache](/guide/api/introduction/caching) don't count.
+- Retries with the same [`X-Request-ID`](/guide/api/introduction/request-ids) that return the stored response don't count.
+- Requests that fail validation (`422`) or hit a rate limit (`429`) don't count.
 - [Test requests](/guide/api/introduction/test-requests) don't count.
 
 ## When you reach the limit
@@ -74,5 +77,6 @@ The usage resets at 00:00 UTC on the first day of each month. Credits don't rese
 ## Related
 
 - [Credits](/guide/api/introduction/credits)
-- [Rate Limit](/guide/api/introduction/rate-limit)
-- [Request Errors](/guide/api/introduction/request-errors)
+- [Free plan](/guide/api/introduction/free-plan)
+- [Rate limits](/guide/api/introduction/rate-limit)
+- [Errors](/guide/api/introduction/request-errors)

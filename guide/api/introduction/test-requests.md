@@ -1,40 +1,92 @@
 ---
-description: >-
-  Learn more how test requests can help you while implementing the API in your
-  project.
+description: Use test_request to build and test your integration without starting a browser and without using your monthly requests.
 ---
 
-# Test Requests
+# Test requests
 
-The number of requests you can make to the screeenly API is limited by your chosen plan. With that in mind, every successful request to the API costs you something.
+Set `test_request` to `true` and screeenly validates your request and returns a placeholder response without starting a browser. Use it while you build your integration and in your test suite.
 
-When implementing third-party APIs in apps, you would like to make actual requests to the respective API, but often don't want to trigger the business logic yet. Something like "Test Requests" would be really handy …
+## What a test request does
 
-screeenly has the concept of test requests built in. When you pass `true` to the `test_request`-parameter we will return a dummy response to you and won't boot a real browser.
+- It runs the same validation as a real request, so a wrong option returns the same `422` error.
+- It returns right away with status `200`.
+- `/shots` returns a `shot_url` to a placeholder image. `/rendered-html` returns a short placeholder HTML snippet.
+- It doesn't count toward your monthly usage and doesn't use credits.
+- It does count toward the [rate limits](/guide/api/introduction/rate-limit).
+- Once your monthly requests and your credits are used up, test requests return a `403` error like real requests.
 
-The request is super fast **and will not count towards your API limit**.   
-The reponse will either contain an URL to a test image or a little test HTML snippet.
+## Example request
 
-Test requests allows you to work on your app and implement the screeenly API without worrying about reaching your monthly API limit.
+::: code-group
 
-An implementation in PHP and Laravel might look like this
-
-```php
-<?php
-
-use Illuminate\Support\Facades\Http;
-
-$response = Http::withToken(config('services.screeenly.api_token'))
-    ->post('https://3.screeenly.com/api/v1/shots', [
-        'url' => 'https://en.wikipedia.org/wiki/Special:Random',
-        'test_request' => app()->runningUnitTests()
-    ]);
-
+```bash [curl]
+curl --request POST \
+  --url https://3.screeenly.com/api/v1/shots \
+  --header 'Accept: application/json' \
+  --header 'Authorization: Bearer YOUR_API_TOKEN' \
+  --data url=https://example.com \
+  --data test_request=1
 ```
 
-In addition, **you request will go through the same validation step** as a real request. This makes testing different parameter configurations super easy.
+```php [PHP]
+use Illuminate\Support\Facades\Http;
 
-### Test Requests in your Test Suite
+$response = Http::withToken('YOUR_API_TOKEN')
+    ->acceptJson()
+    ->post('https://3.screeenly.com/api/v1/shots', [
+        'url' => 'https://example.com',
+        'test_request' => app()->runningUnitTests(),
+    ]);
+```
 
-Your application test suite can also benefit from test requests. If you want to make an API request in your test suite to screeenly but "don't really want to take a screenshot" you can use test requests for that too.
+```js [JavaScript]
+const response = await fetch('https://3.screeenly.com/api/v1/shots', {
+    method: 'POST',
+    headers: {
+        Accept: 'application/json',
+        Authorization: 'Bearer YOUR_API_TOKEN',
+        'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({ url: 'https://example.com', test_request: true }),
+});
+```
 
+```python [Python]
+import requests
+
+response = requests.post(
+    "https://3.screeenly.com/api/v1/shots",
+    headers={"Accept": "application/json", "Authorization": "Bearer YOUR_API_TOKEN"},
+    json={"url": "https://example.com", "test_request": True},
+)
+```
+
+:::
+
+## Response
+
+```json
+{
+    "data": {
+        "url": "https://example.com",
+        "expires_at": "3026-11-01T10:00:00.000000Z",
+        "shot_url": "https://3.screeenly.com/storage/test-request-screenshot.jpg"
+    },
+    "meta": {
+        "request_id": "0195f2a4-6c1e-7a51-9d3b-6c0f1e2a9b47",
+        "usage_limit": {
+            "limit": 100,
+            "usage": 15,
+            "remaining": 85,
+            "resets": "2026-12-01T00:00:00+00:00"
+        }
+    }
+}
+```
+
+`data.url` is always `https://example.com`, and the placeholder image is the same for every request. Don't use test requests to check what a page looks like. Use the [playground](https://3.screeenly.com/app/playground) for that.
+
+## Related
+
+- [Making requests](/guide/api/introduction/)
+- [Errors](/guide/api/introduction/request-errors)
