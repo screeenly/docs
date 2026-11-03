@@ -48,7 +48,7 @@ On the free plan, an identical request returns the stored result from the first 
 
 ## Lift the limits
 
-- [Buy credits](https://3.screeenly.com/app/billing/credits). The smallest pack is 500 credits for $5. Credits don't expire.
+- [Buy credits](https://3.screeenly.com/app/billing/credits). The smallest pack is 1,000 credits for $9. Credits don't expire.
 - [Subscribe to a plan](https://3.screeenly.com/pricing).
 
 ## Related

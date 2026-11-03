@@ -23,15 +23,16 @@ Buy credits on the [Credits page](https://3.screeenly.com/app/billing/credits) i
 
 | Credits | Price |
 | --- | --- |
-| 500 | $5 |
 | 1,000 | $9 |
 | 2,000 | $16 |
 | 5,000 | $35 |
 | 10,000 | $60 |
+| 20,000 | $100 |
+| 50,000 | $200 |
 
 Prices are in USD and exclude tax. Paddle handles the payment and sends the receipt. The credits are added as soon as Paddle confirms the payment, usually within a few seconds.
 
-Need more than 10,000 credits at once? Email [support@screeenly.com](mailto:support@screeenly.com).
+Need more than 50,000 credits at once? Email [support@screeenly.com](mailto:support@screeenly.com).
 
 ::: tip
 If you need more requests every month, a plan costs less per request than credits.

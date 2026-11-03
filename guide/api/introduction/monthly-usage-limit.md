@@ -15,6 +15,7 @@ Every account gets **100 free requests per month**, with or without a plan. A pl
 | No plan | 100 |
 | Small | 2,100 |
 | Base | 10,100 |
+| Plus | 25,100 |
 | Medium | 50,100 |
 | Large | 100,100 |
 
