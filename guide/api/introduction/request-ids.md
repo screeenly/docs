@@ -6,7 +6,7 @@ description: Send an X-Request-ID header to trace requests and to retry a reques
 
 Every API request has an ID. Send your own in the `X-Request-ID` header, or screeenly generates one for you.
 
-The ID is returned in the `X-Request-ID` response header and in `meta.request_id`, and it is shown in the [request log](https://3.screeenly.com/app/request-log) in the app. Include it when you contact support about a request.
+The ID is returned in the `X-Request-ID` header of every response, including errors, and in `meta.request_id`, and it is shown in the [request log](https://3.screeenly.com/app/request-log) in the app. Include it when you contact support about a request.
 
 ## Send your own ID
 
@@ -50,6 +50,7 @@ curl --request POST \
 ```
 
 ```php [PHP]
+use Illuminate\Http\Client\ConnectionException;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Str;
 
@@ -58,7 +59,8 @@ $requestId = (string) Str::uuid();
 $response = Http::withToken('YOUR_API_TOKEN')
     ->acceptJson()
     ->withHeader('X-Request-ID', $requestId)
-    ->retry(3, 1000)
+    // Retries with the same ID when the connection fails.
+    ->retry(3, 1000, fn (Throwable $exception): bool => $exception instanceof ConnectionException, throw: false)
     ->post('https://3.screeenly.com/api/v1/shots', [
         'url' => 'https://example.com',
     ]);
