@@ -23,7 +23,15 @@ export default defineConfig({
     },
 
     head: [
-        ['link', {rel: 'icon', href: '/favicon.ico'}]
+        ['link', {rel: 'icon', href: '/favicon.ico'}],
+
+        // Social networks need an absolute URL. PNG instead of WebP, because not every network reads WebP.
+        ['meta', {property: 'og:image', content: 'https://docs.3.screeenly.com/og-image.png'}],
+        ['meta', {property: 'og:image:width', content: '1200'}],
+        ['meta', {property: 'og:image:height', content: '630'}],
+        ['meta', {property: 'og:image:alt', content: 'screeenly: One request in, one image out.'}],
+        ['meta', {name: 'twitter:card', content: 'summary_large_image'}],
+        ['meta', {name: 'twitter:image', content: 'https://docs.3.screeenly.com/og-image.png'}],
     ],
 
 
