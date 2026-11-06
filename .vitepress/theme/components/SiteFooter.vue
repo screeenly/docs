@@ -27,7 +27,7 @@ const links = [
         <div class="site-footer-grid">
             <div class="site-footer-brand">
                 <a :href="app" class="site-footer-logo">
-                    <img :src="withBase('/screeenly-3-logo.svg')" alt="" />
+                    <img :src="withBase('/screeenly-3-logo.svg?v=2')" alt="" />
                     <span>screeenly</span>
                 </a>
                 <span class="site-footer-tagline">Screenshot and PDF API for developers and their agents.</span>
