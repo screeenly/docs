@@ -4,7 +4,7 @@ description: All notable changes we've made to screeenly since its relaunch.
 
 # Changelog
 
-## v3.1.0 - 2026-11-15
+## v3.1.0 - 2026-11-06
 
 ### New options, caching and request IDs
 
