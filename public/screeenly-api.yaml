@@ -1,8 +1,11 @@
 openapi: 3.0.3
 info:
   title: screeenly API
-  description: The screeenly API allows you to create screenshots, PDFs and HTML from URLs or HTML code.
-  termsOfService: 'https://3.screeenly.com/terms'
+  description: |
+    The screeenly API creates screenshots, PDFs and rendered HTML from URLs or HTML.
+
+    Send either `url` or `html`. Every other option is optional. Accounts without a plan and without credits have lower limits, see [Free plan](/guide/api/introduction/free-plan).
+  termsOfService: 'https://3.screeenly.com/terms-of-service'
   contact:
     name: Support
     email: support@screeenly.com
@@ -15,34 +18,48 @@ security:
 
 tags:
   - name: Shots
-    description: Create screenshots or PDFs from URLs or HTML code.
+    description: Create screenshots or PDFs from URLs or HTML.
   - name: HTML
-    description: Get rendered HTML from URLs or HTML code.
+    description: Get rendered HTML from URLs or HTML.
 
 paths:
   /v1/shots:
     post:
       summary: Screenshot or PDF
-      description: Create a new screenshot or PDF from the given URL or the given HTML source code.
+      description: Create a screenshot or PDF of the given URL or HTML. The response contains a URL to download the file. The file is deleted at `expires_at`.
       operationId: createShot
       tags:
         - Shots
+      parameters:
+        - $ref: '#/components/parameters/X-Request-ID'
       requestBody:
         content:
           application/json:
             schema:
               $ref: '#/components/schemas/BrowsershotRequest'
+            example:
+              url: 'https://example.com'
+              window_width: 1280
+              window_height: 800
         required: true
       responses:
         '201':
-          description: Response when the screenshot or PDF was created successfully.
-          headers:
+          description: The page was rendered.
+          headers: &successHeaders
+            X-Request-ID:
+              $ref: '#/components/headers/X-Request-ID'
+            X-Cache:
+              $ref: '#/components/headers/X-Cache'
             X-Usage-Limit:
               $ref: '#/components/headers/X-Usage-Limit'
             X-Usage-Usage:
               $ref: '#/components/headers/X-Usage-Usage'
             X-Usage-Remaining:
               $ref: '#/components/headers/X-Usage-Remaining'
+            X-Usage-Resets:
+              $ref: '#/components/headers/X-Usage-Resets'
+            X-Credits-Remaining:
+              $ref: '#/components/headers/X-Credits-Remaining'
             X-Ratelimit-Limit:
               $ref: '#/components/headers/X-Ratelimit-Limit'
             X-Ratelimit-Remaining:
@@ -51,10 +68,20 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/BrowsershotResponse'
+        '200':
+          description: The result came from the cache, or the request was a test request or a replay of an earlier request with the same `X-Request-ID`.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BrowsershotResponse'
+        '400':
+          $ref: '#/components/responses/RenderException'
         '401':
           $ref: '#/components/responses/AuthenticationException'
         '403':
           $ref: '#/components/responses/AuthorizationException'
+        '409':
+          $ref: '#/components/responses/ConflictException'
         '422':
           $ref: '#/components/responses/ValidationException'
         '429':
@@ -65,38 +92,43 @@ paths:
   /v1/rendered-html:
     post:
       summary: Rendered HTML
-      description: Return the rendered HTML for the given URL or the given HTML code.
+      description: Return the HTML of the given URL or HTML after its JavaScript ran.
       operationId: renderedHtml
       tags:
         - HTML
+      parameters:
+        - $ref: '#/components/parameters/X-Request-ID'
       requestBody:
         content:
           application/json:
             schema:
               $ref: '#/components/schemas/HtmlBrowsershotRequest'
+            example:
+              url: 'https://example.com'
+              wait_until_network_idle: true
         required: true
       responses:
         '201':
-          description: Response when the HTML of the given URL or HTML code was rendered successfully.
-          headers:
-            X-Usage-Limit:
-              $ref: '#/components/headers/X-Usage-Limit'
-            X-Usage-Usage:
-              $ref: '#/components/headers/X-Usage-Usage'
-            X-Usage-Remaining:
-              $ref: '#/components/headers/X-Usage-Remaining'
-            X-Ratelimit-Limit:
-              $ref: '#/components/headers/X-Ratelimit-Limit'
-            X-Ratelimit-Remaining:
-              $ref: '#/components/headers/X-Ratelimit-Remaining'
+          description: The page was rendered.
+          headers: *successHeaders
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/HtmlBrowsershotResponse'
+        '200':
+          description: The result came from the cache, or the request was a test request or a replay of an earlier request with the same `X-Request-ID`.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HtmlBrowsershotResponse'
+        '400':
+          $ref: '#/components/responses/RenderException'
         '401':
           $ref: '#/components/responses/AuthenticationException'
         '403':
           $ref: '#/components/responses/AuthorizationException'
+        '409':
+          $ref: '#/components/responses/ConflictException'
         '422':
           $ref: '#/components/responses/ValidationException'
         '429':
@@ -109,37 +141,85 @@ components:
     bearerAuth:
       type: http
       scheme: bearer
-      bearerFormat: JWT
+      description: An API token from https://3.screeenly.com/app/api-tokens with the `shot:create` ability.
+
+  parameters:
+    X-Request-ID:
+      name: X-Request-ID
+      in: header
+      required: false
+      description: Your own ID for the request, 1 to 255 printable ASCII characters without spaces. Send the same ID again to get the stored response of a successful request without paying twice. See [Request IDs and retries](/guide/api/introduction/request-ids).
+      schema:
+        type: string
+        example: 550e8400-e29b-41d4-a716-446655440000
+
   headers:
+    X-Request-ID:
+      description: The ID you sent, or one generated for the request.
+      schema:
+        type: string
+        example: 0195f2a4-6c1e-7a51-9d3b-6c0f1e2a9b47
+    X-Cache:
+      description: '`HIT` if the result came from the cache, `MISS` if the page was rendered.'
+      schema:
+        type: string
+        enum:
+          - HIT
+          - MISS
     X-Usage-Limit:
-      description: The usage limit of the user
+      description: The monthly request limit (100 free requests plus the requests of the plan).
       schema:
         type: integer
-        example: 1000
+        example: 2100
     X-Usage-Usage:
-      description: The usage of the user
+      description: The requests made this month.
       schema:
         type: integer
         example: 15
     X-Usage-Remaining:
-      description: The remaining usage of the user
+      description: The requests left this month.
       schema:
         type: integer
-        example: 985
+        example: 2085
+    X-Usage-Resets:
+      description: When the monthly usage resets, as an ISO 8601 date.
+      schema:
+        type: string
+        example: '2026-12-01T00:00:00+00:00'
+    X-Credits-Remaining:
+      description: The credit balance. Credits pay for requests once the monthly requests are used up.
+      schema:
+        type: integer
+        example: 500
     X-Ratelimit-Limit:
-      description: The maximum number of request the user can make in a minute.
+      description: The requests you can make per minute.
       schema:
         type: integer
         example: 30
     X-Ratelimit-Remaining:
-      description: The remaining number of request the user can make in a given minute.
+      description: The requests left in the current minute.
       schema:
         type: integer
         example: 15
+    Retry-After:
+      description: Seconds to wait before the next request.
+      schema:
+        type: integer
+        example: 42
 
   responses:
+    RenderException:
+      description: The browser failed to render the page or timed out. Counts toward the monthly usage. Also returned for an invalid `X-Request-ID` header.
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                example: 'The request to https://example.com timed out after 10 seconds. Check that the server is available, increase the timeout and try again.'
     AuthenticationException:
-      description: Response when the user is not authenticated
+      description: The API token is missing or invalid.
       content:
         application/json:
           schema:
@@ -149,7 +229,7 @@ components:
                 type: string
                 example: 'Unauthenticated.'
     AuthorizationException:
-      description: Response when the user is not authorized to access the resource or perform the action.
+      description: The monthly requests and credits are used up, the email address is not verified, the account is blocked, or the token doesn't have the `shot:create` ability.
       content:
         application/json:
           schema:
@@ -157,16 +237,22 @@ components:
             properties:
               message:
                 type: string
-                example: 'Access denied. Your trial has expired and you did not subscribe to a plan. Subscribe to a plan here: https://3.screeenly.com/billing/subscriptions.'
+                example: 'The monthly API usage limit has been reached (100 out of 100 requests) and there are no credits left. Upgrade your plan or buy credits under https://3.screeenly.com/app/billing/credits. The limit resets at the start of next month.'
+    ConflictException:
+      description: A request with the same `X-Request-ID` is still running.
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                example: 'A request with this X-Request-ID is still running. Wait for its response before you send it again.'
     TooManyAttemptsException:
-      description: Response when the user has reached the rate limit.
+      description: The rate limit was reached, or too many requests are running at the same time.
       headers:
-        X-Usage-Limit:
-          $ref: '#/components/headers/X-Usage-Limit'
-        X-Usage-Usage:
-          $ref: '#/components/headers/X-Usage-Usage'
-        X-Usage-Remaining:
-          $ref: '#/components/headers/X-Usage-Remaining'
+        Retry-After:
+          $ref: '#/components/headers/Retry-After'
         X-Ratelimit-Limit:
           $ref: '#/components/headers/X-Ratelimit-Limit'
         X-Ratelimit-Remaining:
@@ -180,12 +266,7 @@ components:
                 type: string
                 example: 'Too Many Attempts.'
     ValidationException:
-      description: Response when the given data was invalid.
-      headers:
-        X-Ratelimit-Limit:
-          $ref: '#/components/headers/X-Ratelimit-Limit'
-        X-Ratelimit-Remaining:
-          $ref: '#/components/headers/X-Ratelimit-Remaining'
+      description: The request failed validation. Doesn't count toward the monthly usage.
       content:
         application/json:
           schema:
@@ -193,23 +274,20 @@ components:
             properties:
               message:
                 type: string
-                example: 'The field is required. (and 1 more error)'
+                example: 'The url field is required when html is not present. (and 1 more error)'
               errors:
                 type: object
                 additionalProperties:
-                    type: array
-                    items:
-                      type: string
-                      example: The {{key}} field is required.
+                  type: array
+                  items:
+                    type: string
+                example:
+                  url:
+                    - The url field is required when html is not present.
+                  html:
+                    - The html field is required when url is not present.
     ServerException:
-      description: Response when the server encountered an error.
-      headers:
-        X-Usage-Limit:
-          $ref: '#/components/headers/X-Usage-Limit'
-        X-Usage-Usage:
-          $ref: '#/components/headers/X-Usage-Usage'
-        X-Usage-Remaining:
-          $ref: '#/components/headers/X-Usage-Remaining'
+      description: Something failed on our side. Retry with the same `X-Request-ID`.
       content:
         application/json:
           schema:
@@ -217,292 +295,317 @@ components:
             properties:
               message:
                 type: string
-                example: 'Server Error.'
+                example: 'Server Error'
 
   schemas:
-    BrowsershotRequest:
+    CommonOptions:
       type: object
-
-      required:
-        - url
       properties:
         url:
           type: string
-          example: 'https://www.google.com'
-          description: The URL must be accessible to screeenly servers
+          example: 'https://example.com'
+          description: The page to load. Must start with `http://` or `https://` and be reachable from the internet. Required without `html`.
         html:
           type: string
-          description: Required, if URL is not set
-        file_type:
-          type: string
-          default: png
-          enum:
-            - jpg
-            - png
-            - webp
-            - pdf
+          maxLength: 2000000
+          description: HTML to render instead of a URL. Required without `url`. If you send both, `html` is used.
         window_width:
-          type: number
+          type: integer
           minimum: 1
           maximum: 10000
+          description: Width of the browser window in pixels. Defaults to 800. Free plan up to 1920. Requires `window_height` unless `full_page` is set.
         window_height:
-          type: number
+          type: integer
           minimum: 1
           maximum: 10000
+          description: Height of the browser window in pixels. Defaults to 600. Free plan up to 1080.
         timeout:
           type: integer
+          minimum: 0
+          maximum: 60
           default: 10
+          description: Seconds until the request gives up. Free plan up to 15.
         delay:
           type: integer
           minimum: 0
           maximum: 30000
           default: 0
-          description: Delay in milliseconds before the browser is capturing the screenshot
-        paper_width:
-          type: number
-          minimum: 1
-          maximum: 100000
-        paper_height:
-          type: number
-          minimum: 1
-          maximum: 100000
-        paper_format:
+          description: Milliseconds to wait after the page loaded. Free plan up to 2000.
+        wait_for_selector:
           type: string
-          enum:
-            - A0
-            - A1
-            - A2
-            - A3
-            - A4
-            - A5
-            - A6
-            - Letter
-            - Legal
-            - Tabloid
-            - Ledger
-        paper_margins_top:
-          type: number
-          minimum: 0
-          maximum: 250
-        paper_margins_right:
-          type: number
-          minimum: 0
-          maximum: 250
-        paper_margins_bottom:
-          type: number
-          minimum: 0
-          maximum: 250
-        paper_margins_left:
-          type: number
-          minimum: 0
-          maximum: 250
-        paper_orientation:
-          type: string
-          enum:
-            - landscape
-            - portrait
-          default: portrait
-        pdf_show_background:
+          maxLength: 1000
+          example: '#content'
+          description: Wait until an element matching this CSS selector exists. Fails with a timeout if it never appears.
+        wait_until_network_idle:
           type: boolean
           default: false
-        selector:
-          type: string
-          example: '#app'
-          description: CSS Selector
-        full_page:
-          type: boolean
-          default: false
-          description: 'Indicates if the entire height of the website should be captured in the screenshot'
-        clip_x:
-          type: integer
-          description: The position on the x-axis where the clipping should start
-        clip_y:
-          type: integer
-          description: The position on the y-axis where the clipping should start
-        clip_width:
-          type: integer
-          description: The width of the clip in pixels
-        clip_height:
-          type: integer
-          description: The height of the clip in pixels
-        device_scale_factor:
-          type: integer
-          default: 1
-          enum:
-            - 1
-            - 2
-            - 3
-          description: Set the pixel density to generate the screenshot
-        hide_background:
-          type: boolean
-          default: false
-          description: Set to true, to ignore the website's background when capturing a screenshot
-        transparent_background:
-          type: boolean
-          default: false
-          description: Set to true, to turn the default background color (white) to transparent.
-        show_browser_header_and_footer:
-          type: boolean
-          default: false
-          description: Set to true, to show the header and footer generated by the browser when generating a PDF.
-        header_html:
-          type: string
-          description: HTML to be shown in the browsers header when generating a PDF. Check out [Cookbook](/guide/cookbook/print-headers-and-footers-in-pdfs) for examples.
-          example: '<span class="date"></span><span class="title"></span>'
-        footer_html:
-          type: string
-          description: HTML to be shown in the browsers footer when generating a PDF. Check out [Cookbook](/guide/cookbook/print-headers-and-footers-in-pdfs) for examples.
-          example: '<span class="pageNumber"></span><span class="totalPages"></span>'
-        dismiss_dialogs:
-          type: boolean
-          default: false
-          description: Set to true, to automatically close popups, alerts or confirmation dialogs generated through JavaScript
-        disable_javascript:
-          type: boolean
-          default: false
-          description: Set to true, to disable JavaScript in the browser.
+          description: Wait until the page has at most 2 open network connections for 500 ms.
         wait_until_network_idle_strict:
           type: boolean
           default: false
-          description: Set to true, to allow up to 2 network connections in the 500ms period. This setting is useful, if the website regularly pings and endpoint with XHR.
-        disable_web_security:
-          type: boolean
-          default: false
-          description: Set to true, to disable [CORS](https://developer.mozilla.org/en-US/docs/Web/HTTP/CORS) checks in the browser
-        browser_language:
-          type: string
-          default: 'en-GB'
-          description: Must be a valid ISO 639-1 language code.
+          description: Wait until the page has no open network connections for 500 ms.
         css_media_type:
           type: string
           enum:
             - screen
             - print
-          default: screen
-        ignore_https_errors:
-          type: boolean
-          default: false
-          description: Set to true, to ignore errors related to HTTPS/SSL certificates
-        http_headers:
-          type: array
-          description: Array of HTTP headers passed to the browser
-          items:
-            type: object
-            properties:
-              key:
-                type: string
-                example: 'X-My-Header'
-              value:
-                type: string
-                example: 'My Value'
-        cookies:
-          type: array
-          description: Array of cookies passed to the browser
-          items:
-            type: object
-            properties:
-              key:
-                type: string
-                example: 'my_cookie'
-              value:
-                type: string
-                example: 'my_value'
-              domain:
-                type: string
-                example: 'example.com'
-        basic_authentication_username:
+          description: Without it, screenshots use `screen` and PDFs use `print` styles.
+        color_scheme:
           type: string
-          description: The username which should be used for the Basic Authentication
-        basic_authentication_password:
-          type: string
-          description: The password which should be used for the Basic Authentication
-    HtmlBrowsershotRequest:
-      type: object
-
-      required:
-        - url
-      properties:
-        url:
-          type: string
-          example: 'https://www.google.com'
-          description: The URL must be accessible to screeenly servers
-        html:
-          type: string
-          description: Required, if URL is not set
-        window_width:
-          type: number
-          minimum: 1
-          maximum: 10000
-        window_height:
-          type: number
-          minimum: 1
-          maximum: 10000
-        timeout:
-          type: integer
-          default: 10
-        delay:
-          type: integer
-          minimum: 0
-          maximum: 30000
-          default: 0
-          description: Delay in milliseconds before the browser is capturing the screenshot
-        dismiss_dialogs:
-          type: boolean
-          default: false
-          description: Set to true, to automatically close popups, alerts or confirmation dialogs generated through JavaScript
-        disable_javascript:
-          type: boolean
-          default: false
-          description: Set to true, to disable JavaScript in the browser.
-        wait_until_network_idle_strict:
-          type: boolean
-          default: false
-          description: Set to true, to allow up to 2 network connections in the 500ms period. This setting is useful, if the website regularly pings and endpoint with XHR.
-        disable_web_security:
-          type: boolean
-          default: false
-          description: Set to true, to disable [CORS](https://developer.mozilla.org/en-US/docs/Web/HTTP/CORS) checks in the browser
+          enum:
+            - light
+            - dark
+          description: Sets `prefers-color-scheme`.
         browser_language:
           type: string
           default: 'en-GB'
-          description: Must be a valid ISO 639-1 language code.
+          example: 'de'
+          description: Language of the browser, as a language code like `de` or `fr-CH`.
+        disable_javascript:
+          type: boolean
+          default: false
+          description: Load the page without running JavaScript.
+        disable_images:
+          type: boolean
+          default: false
+          description: Load the page without images.
+        dismiss_dialogs:
+          type: boolean
+          default: false
+          description: Close JavaScript `alert`, `confirm` and `prompt` dialogs.
+        block_urls:
+          type: array
+          maxItems: 50
+          description: Don't load resources whose URL contains one of these strings.
+          items:
+            type: string
+            minLength: 3
+            maxLength: 255
+            example: 'analytics.js'
+        block_domains:
+          type: array
+          maxItems: 50
+          description: Don't load resources from these domains.
+          items:
+            type: string
+            maxLength: 255
+            example: 'googletagmanager.com'
         ignore_https_errors:
           type: boolean
           default: false
-          description: Set to true, to ignore errors related to HTTPS/SSL certificates
+          description: Load pages with invalid or self-signed certificates.
+        disable_web_security:
+          type: boolean
+          default: false
+          description: Turn off [CORS](https://developer.mozilla.org/en-US/docs/Web/HTTP/CORS) checks in the browser.
         http_headers:
           type: array
-          description: Array of HTTP headers passed to the browser
+          maxItems: 50
+          description: Extra HTTP headers sent with every request of the page.
           items:
             type: object
             properties:
               key:
                 type: string
+                maxLength: 255
                 example: 'X-My-Header'
               value:
                 type: string
+                maxLength: 8192
                 example: 'My Value'
         cookies:
           type: array
-          description: Array of cookies passed to the browser
+          maxItems: 50
+          description: Cookies set before the page loads.
           items:
             type: object
             properties:
               key:
                 type: string
+                maxLength: 255
                 example: 'my_cookie'
               value:
                 type: string
+                maxLength: 4096
                 example: 'my_value'
               domain:
                 type: string
+                maxLength: 255
                 example: 'example.com'
         basic_authentication_username:
           type: string
-          description: The username which should be used for the Basic Authentication
+          description: Username for HTTP basic authentication. Requires the password.
         basic_authentication_password:
           type: string
-          description: The password which should be used for the Basic Authentication
+          description: Password for HTTP basic authentication. Requires the username.
+        test_request:
+          type: boolean
+          default: false
+          description: Validate the request and return a placeholder without starting a browser. Doesn't count toward the monthly usage.
+        cache:
+          type: boolean
+          default: true
+          description: Set to `false` to render the page again instead of returning a stored result. Not available on the free plan.
+        cache_ttl:
+          type: integer
+          minimum: 60
+          maximum: 86400
+          default: 86400
+          description: How long to keep the result, in seconds. Not available on the free plan.
+
+    BrowsershotRequest:
+      allOf:
+        - $ref: '#/components/schemas/CommonOptions'
+        - type: object
+          properties:
+            file_type:
+              type: string
+              default: png
+              enum:
+                - png
+                - jpg
+                - webp
+                - pdf
+            quality:
+              type: integer
+              minimum: 1
+              maximum: 100
+              description: Image quality. Only with `file_type` `jpg` or `webp`.
+            device_scale_factor:
+              type: integer
+              default: 1
+              minimum: 1
+              maximum: 3
+              description: Pixel density. Free plan only 1.
+            full_page:
+              type: boolean
+              default: false
+              description: Capture the whole scrollable page. Not available on the free plan. Can't be combined with `selector` or `clip_*`.
+            selector:
+              type: string
+              example: '#app'
+              description: CSS selector of one element to capture. Can't be combined with `full_page`.
+            clip_x:
+              type: integer
+              description: Left edge of the area to capture, in pixels. Send all four `clip_*` options together.
+            clip_y:
+              type: integer
+              description: Top edge of the area to capture, in pixels.
+            clip_width:
+              type: integer
+              minimum: 1
+              description: Width of the area to capture. Free plan up to 1920.
+            clip_height:
+              type: integer
+              minimum: 1
+              description: Height of the area to capture. Free plan up to 1080.
+            hide_background:
+              type: boolean
+              default: false
+              description: Leave out the page background.
+            transparent_background:
+              type: boolean
+              default: false
+              description: Make the default white background transparent. Use with `png` or `webp`.
+            paper_format:
+              type: string
+              enum:
+                - A0
+                - A1
+                - A2
+                - A3
+                - A4
+                - A5
+                - A6
+                - Letter
+                - Legal
+                - Tabloid
+                - Ledger
+              description: Required for PDFs unless `paper_width` and `paper_height` are set.
+            paper_width:
+              type: number
+              minimum: 1
+              maximum: 5000
+              description: Paper width in millimeters. Requires `paper_height`.
+            paper_height:
+              type: number
+              minimum: 1
+              maximum: 5000
+              description: Paper height in millimeters. Requires `paper_width`.
+            paper_orientation:
+              type: string
+              enum:
+                - portrait
+                - landscape
+              default: portrait
+            paper_margins_top:
+              type: number
+              minimum: 0
+              maximum: 250
+              description: In millimeters. Send all four margins together.
+            paper_margins_right:
+              type: number
+              minimum: 0
+              maximum: 250
+              description: In millimeters.
+            paper_margins_bottom:
+              type: number
+              minimum: 0
+              maximum: 250
+              description: In millimeters.
+            paper_margins_left:
+              type: number
+              minimum: 0
+              maximum: 250
+              description: In millimeters.
+            pdf_show_background:
+              type: boolean
+              default: true
+              description: Print background colors and images.
+            show_browser_header_and_footer:
+              type: boolean
+              default: false
+              description: Print a header and a footer on every page of a PDF.
+            header_html:
+              type: string
+              maxLength: 100000
+              description: HTML for the PDF header. See [Headers and footers in PDFs](/guide/cookbook/print-headers-and-footers-in-pdfs).
+              example: '<span class="date"></span> <span class="title"></span>'
+            footer_html:
+              type: string
+              maxLength: 100000
+              description: HTML for the PDF footer. See [Headers and footers in PDFs](/guide/cookbook/print-headers-and-footers-in-pdfs).
+              example: '<span class="pageNumber"></span> / <span class="totalPages"></span>'
+            initial_page_number:
+              type: integer
+              description: The number of the first page in headers and footers.
+
+    HtmlBrowsershotRequest:
+      allOf:
+        - $ref: '#/components/schemas/CommonOptions'
+
+    UsageMeta:
+      type: object
+      properties:
+        request_id:
+          type: string
+          example: 0195f2a4-6c1e-7a51-9d3b-6c0f1e2a9b47
+        usage_limit:
+          type: object
+          properties:
+            limit:
+              type: integer
+              example: 100
+            usage:
+              type: integer
+              example: 15
+            remaining:
+              type: integer
+              example: 85
+            resets:
+              type: string
+              example: '2026-12-01T00:00:00+00:00'
+
     BrowsershotResponse:
       type: object
       properties:
@@ -511,34 +614,20 @@ components:
           properties:
             url:
               type: string
+              nullable: true
               example: 'https://example.com'
+              description: The URL you sent. `null` for HTML.
             expires_at:
-              type: integer
-              example: 1920
+              type: string
+              example: '2026-11-02T14:30:00+00:00'
+              description: When the file is deleted.
             shot_url:
               type: string
-              example: https://3.screeenly.com/storage/149032/0c8532c6-38da-4389-a038-5e73e2c42304.jpg
+              example: https://3.screeenly.com/storage/149032/0c8532c6-38da-4389-a038-5e73e2c42304.png
+              description: Where to download the file until `expires_at`.
         meta:
-          type: object
-          properties:
-            request_id:
-              type: string
-              example: null
-            usage_limit:
-              type: object
-              properties:
-                limit:
-                  type: integer
-                  example: 1000
-                usage:
-                  type: integer
-                  example: 15
-                remaining:
-                  type: integer
-                  example: 985
-                resets:
-                  type: string
-                  example: '2024-01-01T00:00:00.000000Z'
+          $ref: '#/components/schemas/UsageMeta'
+
     HtmlBrowsershotResponse:
       type: object
       properties:
@@ -549,23 +638,4 @@ components:
               type: string
               example: '<html><head></head><body><h1>Hello World</h1></body></html>'
         meta:
-          type: object
-          properties:
-            request_id:
-              type: string
-              example: null
-            usage_limit:
-              type: object
-              properties:
-                limit:
-                  type: integer
-                  example: 1000
-                usage:
-                  type: integer
-                  example: 15
-                remaining:
-                  type: integer
-                  example: 985
-                resets:
-                  type: string
-                  example: '2024-01-01T00:00:00.000000Z'
+          $ref: '#/components/schemas/UsageMeta'

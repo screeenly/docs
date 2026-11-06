@@ -1,0 +1,407 @@
+/**
+ * Maps the screeenly design tokens (tokens.css) onto VitePress's --vp-* variables and
+ * restyles a few default theme components to match 3.screeenly.com.
+ */
+
+/* The app maps Tailwind's `gray` onto `zinc`. tokens.css does not define the zinc scale. */
+:root {
+    --color-zinc-50: #fafafa;
+    --color-zinc-100: #f4f4f5;
+    --color-zinc-200: #e4e4e7;
+    --color-zinc-300: #d4d4d8;
+    --color-zinc-400: #a1a1aa;
+    --color-zinc-500: #71717a;
+    --color-zinc-600: #52525b;
+    --color-zinc-700: #3f3f46;
+    --color-zinc-800: #27272a;
+    --color-zinc-900: #18181b;
+
+    /* Family names of the @fontsource packages imported in index.ts. */
+    --font-geist: 'Geist Variable';
+    --font-geist-mono: 'Geist Mono Variable';
+    --font-bricolage-grotesque: 'Bricolage Grotesque';
+}
+
+:root {
+    --vp-font-family-base: var(--font-sans);
+    --vp-font-family-mono: var(--font-mono);
+
+    --vp-c-brand-1: var(--color-purple-dark);
+    --vp-c-brand-2: var(--color-purple);
+    --vp-c-brand-3: var(--color-ink);
+    --vp-c-brand-soft: var(--color-purple-tint);
+
+    --vp-c-bg: var(--color-paper);
+    --vp-c-bg-alt: var(--color-subtle);
+    --vp-c-bg-soft: var(--color-subtle);
+    --vp-c-bg-elv: var(--color-paper);
+
+    --vp-c-text-1: var(--color-ink);
+    --vp-c-text-2: var(--color-ink-soft);
+    --vp-c-text-3: var(--color-muted);
+
+    --vp-c-border: var(--color-line);
+    --vp-c-divider: var(--color-line-soft);
+    --vp-c-gutter: var(--color-line-soft);
+
+    --vp-c-default-1: var(--color-zinc-400);
+    --vp-c-default-2: var(--color-zinc-200);
+    --vp-c-default-3: var(--color-zinc-100);
+    --vp-c-default-soft: var(--color-zinc-100);
+
+    --vp-c-tip-1: var(--color-mint-dark);
+    --vp-c-tip-2: var(--color-mint-dark);
+    --vp-c-tip-3: var(--color-mint);
+    --vp-c-tip-soft: var(--color-mint-tint);
+
+    --vp-c-note-1: var(--color-ink-soft);
+    --vp-c-note-2: var(--color-ink-soft);
+    --vp-c-note-3: var(--color-zinc-400);
+    --vp-c-note-soft: var(--color-subtle);
+
+    --vp-c-important-1: var(--color-purple-dark);
+    --vp-c-important-2: var(--color-purple-dark);
+    --vp-c-important-3: var(--color-purple);
+    --vp-c-important-soft: var(--color-purple-tint);
+
+    --vp-c-warning-1: var(--color-yellow-dark);
+    --vp-c-warning-2: var(--color-yellow-dark);
+    --vp-c-warning-3: var(--color-yellow);
+    --vp-c-warning-soft: var(--color-yellow-tint);
+
+    --vp-c-danger-1: var(--color-pink-dark);
+    --vp-c-danger-2: var(--color-pink-dark);
+    --vp-c-danger-3: var(--color-pink);
+    --vp-c-danger-soft: var(--color-pink-tint);
+
+    --vp-c-caution-1: var(--color-pink-dark);
+    --vp-c-caution-2: var(--color-pink-dark);
+    --vp-c-caution-3: var(--color-pink);
+    --vp-c-caution-soft: var(--color-pink-tint);
+
+    --vp-c-success-1: var(--color-mint-dark);
+    --vp-c-success-2: var(--color-mint-dark);
+    --vp-c-success-3: var(--color-mint);
+    --vp-c-success-soft: var(--color-mint-tint);
+
+    /* Buttons are ink, like in the app. */
+    --vp-button-brand-bg: var(--color-ink);
+    --vp-button-brand-hover-bg: var(--color-zinc-700);
+    --vp-button-brand-active-bg: var(--color-zinc-800);
+    --vp-button-alt-border: var(--color-line);
+    --vp-button-alt-text: var(--color-ink);
+    --vp-button-alt-bg: var(--color-paper);
+    --vp-button-alt-hover-border: var(--color-zinc-300);
+    --vp-button-alt-hover-text: var(--color-ink);
+    --vp-button-alt-hover-bg: var(--color-subtle);
+    --vp-button-alt-active-border: var(--color-zinc-300);
+    --vp-button-alt-active-text: var(--color-ink);
+    --vp-button-alt-active-bg: var(--color-zinc-100);
+
+    /* Callouts use the same colors as <x-ui.note> in the app. */
+    --vp-custom-block-font-size: 0.875rem;
+    --vp-custom-block-info-border: var(--color-line);
+    --vp-custom-block-info-bg: var(--color-subtle);
+    --vp-custom-block-info-code-bg: var(--color-paper);
+    --vp-custom-block-note-border: var(--color-line);
+    --vp-custom-block-note-bg: var(--color-subtle);
+    --vp-custom-block-note-code-bg: var(--color-paper);
+    --vp-custom-block-tip-border: #bfeedb;
+    --vp-custom-block-tip-text: #24453a;
+    --vp-custom-block-tip-bg: var(--color-mint-tint);
+    --vp-custom-block-tip-code-bg: var(--color-paper);
+    --vp-custom-block-important-border: #d9d0ff;
+    --vp-custom-block-important-text: var(--color-ink);
+    --vp-custom-block-important-bg: var(--color-purple-tint);
+    --vp-custom-block-important-code-bg: var(--color-paper);
+    --vp-custom-block-warning-border: #f5e08a;
+    --vp-custom-block-warning-text: #4d3a00;
+    --vp-custom-block-warning-bg: var(--color-yellow-tint);
+    --vp-custom-block-warning-code-bg: var(--color-paper);
+    --vp-custom-block-danger-border: #ffc6e7;
+    --vp-custom-block-danger-text: #5e0f3e;
+    --vp-custom-block-danger-bg: var(--color-pink-tint);
+    --vp-custom-block-danger-code-bg: var(--color-paper);
+    --vp-custom-block-caution-border: #ffc6e7;
+    --vp-custom-block-caution-text: #5e0f3e;
+    --vp-custom-block-caution-bg: var(--color-pink-tint);
+    --vp-custom-block-caution-code-bg: var(--color-paper);
+
+    /* Inline code is a zinc pill. Code blocks are dark, like <x-ui.code> in the app. */
+    --vp-code-color: var(--color-ink);
+    --vp-code-bg: var(--color-zinc-100);
+    --vp-code-link-color: var(--color-purple-dark);
+    --vp-code-link-hover-color: var(--color-purple);
+    --vp-code-block-color: var(--color-zinc-300);
+    --vp-code-block-bg: var(--color-ink);
+    --vp-code-block-divider-color: var(--color-zinc-800);
+    --vp-code-lang-color: var(--color-zinc-400);
+    --vp-code-line-highlight-color: rgb(255 255 255 / 0.06);
+    --vp-code-line-number-color: var(--color-zinc-600);
+    --vp-code-copy-code-border-color: var(--color-zinc-700);
+    --vp-code-copy-code-bg: var(--color-zinc-800);
+    --vp-code-copy-code-hover-border-color: var(--color-zinc-600);
+    --vp-code-copy-code-hover-bg: var(--color-zinc-700);
+    --vp-code-copy-code-active-text: var(--color-zinc-300);
+    --vp-code-tab-divider: var(--color-zinc-800);
+    --vp-code-tab-text-color: var(--color-zinc-400);
+    --vp-code-tab-bg: var(--color-ink);
+    --vp-code-tab-hover-text-color: #ffffff;
+    --vp-code-tab-active-text-color: #ffffff;
+    --vp-code-tab-active-bar-color: var(--color-purple);
+
+    --vp-home-hero-name-color: var(--color-ink);
+
+    --vp-nav-bg-color: var(--color-paper);
+    --vp-sidebar-bg-color: var(--color-paper);
+    --vp-local-search-highlight-bg: var(--color-purple-tint);
+    --vp-local-search-highlight-text: var(--color-ink);
+}
+
+/* Header: same height, border and logo as the nav on 3.screeenly.com. */
+.VPNavBar,
+.VPNavBar.has-sidebar .content-body,
+.VPNavBar .divider-line {
+    background-color: var(--color-paper) !important;
+}
+
+.VPNavBar {
+    border-bottom: 1px solid var(--color-line-soft);
+}
+
+.VPNavBar .divider {
+    display: none;
+}
+
+.VPNavBarTitle .title {
+    gap: 0.75rem;
+    font-family: var(--font-logo);
+    font-size: 1.25rem;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    color: var(--color-ink);
+}
+
+.VPNavBarTitle .logo {
+    height: 2.25rem;
+    margin-right: 0;
+}
+
+.VPNavBarMenuLink,
+.VPNavBarMenuGroup .button .text {
+    font-size: 0.875rem !important;
+    font-weight: 400 !important;
+    color: var(--color-ink-soft) !important;
+}
+
+.VPNavBarMenuLink:hover,
+.VPNavBarMenuGroup .button:hover .text,
+.VPNavBarMenuGroup .button[aria-expanded='true'] .text {
+    color: var(--color-ink) !important;
+}
+
+.VPNavBarMenuLink.active,
+.VPNavBarMenuGroup.active .button .text {
+    font-weight: 500 !important;
+    color: var(--color-ink) !important;
+}
+
+.VPMenu {
+    border: 1px solid var(--color-line) !important;
+    border-radius: 0.75rem;
+    box-shadow: var(--shadow-menu);
+}
+
+.VPMenuLink .link {
+    color: var(--color-ink);
+    font-weight: 400;
+}
+
+.VPMenuLink .link:hover {
+    background-color: var(--color-subtle);
+    color: var(--color-ink);
+}
+
+/* Sidebar: active item in ink, like the app panel. */
+.VPSidebarItem.is-active > .item .link > .text {
+    color: var(--color-ink) !important;
+    font-weight: 500;
+}
+
+.VPSidebarItem.is-active > .item > .indicator {
+    background-color: var(--color-ink) !important;
+}
+
+.VPSidebarItem .text {
+    color: var(--color-ink-soft);
+}
+
+.VPSidebarItem.level-0 > .item .text {
+    color: var(--color-ink);
+}
+
+/* Content */
+.vp-doc {
+    color: var(--color-zinc-800);
+}
+
+.vp-doc h1,
+.vp-doc h2,
+.vp-doc h3,
+.vp-doc h4 {
+    color: var(--color-ink);
+    font-weight: 600;
+}
+
+.vp-doc h1 {
+    letter-spacing: -0.04em;
+}
+
+.vp-doc h2 {
+    border-top-color: var(--color-line-soft);
+    letter-spacing: -0.025em;
+}
+
+.vp-doc h3 {
+    letter-spacing: -0.015em;
+}
+
+.vp-doc a {
+    color: var(--color-purple);
+    font-weight: 400;
+    text-underline-offset: 3px;
+}
+
+.vp-doc a:hover {
+    color: var(--color-purple-dark);
+}
+
+.vp-doc :not(pre) > code {
+    border-radius: 5px;
+    padding: 1px 5px;
+    font-size: 0.9em;
+}
+
+.vp-doc a > code {
+    color: var(--color-purple-dark);
+}
+
+/* Below 640px VitePress runs code blocks edge to edge without corners. */
+@media (min-width: 640px) {
+    .vp-doc [class*='language-'],
+    .vp-code-group .tabs {
+        border-radius: 0.75rem;
+    }
+
+    .vp-code-group .tabs {
+        border-bottom-left-radius: 0;
+        border-bottom-right-radius: 0;
+    }
+
+    .vp-code-group div[class*='language-'] {
+        border-top-left-radius: 0;
+        border-top-right-radius: 0;
+    }
+}
+
+.vp-doc .custom-block {
+    border-radius: var(--radius-card);
+}
+
+.vp-doc .custom-block .custom-block-title {
+    color: var(--color-ink);
+    font-weight: 600;
+}
+
+.vp-doc .custom-block code {
+    color: inherit;
+}
+
+.vp-doc .custom-block a {
+    color: inherit;
+    text-decoration: underline;
+}
+
+.vp-doc table {
+    display: table;
+    width: 100%;
+    font-size: 0.875rem;
+}
+
+.vp-doc tr {
+    background-color: var(--color-paper);
+}
+
+.vp-doc th {
+    background-color: var(--color-subtle);
+    color: var(--color-muted);
+    font-weight: 500;
+}
+
+.vp-doc th,
+.vp-doc td {
+    border-color: var(--color-line);
+}
+
+/* Buttons on the home page */
+.VPButton {
+    border-radius: 0.5rem !important;
+    font-weight: 500 !important;
+}
+
+.VPButton.alt {
+    border-width: 1px;
+}
+
+/* Home page */
+.VPHero .name,
+.VPHero .text {
+    font-weight: 600;
+    letter-spacing: -0.045em;
+}
+
+.VPHero .tagline {
+    color: var(--color-ink-soft);
+}
+
+.VPFeature {
+    border: 1px solid var(--color-line) !important;
+    border-radius: var(--radius-card) !important;
+    background-color: var(--color-paper) !important;
+}
+
+.VPFeature:hover {
+    border-color: var(--color-zinc-300) !important;
+}
+
+.VPFeature .title {
+    font-weight: 600;
+}
+
+.VPFeature .link-text-value {
+    color: var(--color-purple);
+    font-weight: 500;
+}
+
+/* Prev/next links and the edit link */
+.VPDocFooter .pager-link {
+    border-color: var(--color-line);
+    border-radius: var(--radius-card);
+}
+
+.VPDocFooter .pager-link:hover {
+    border-color: var(--color-zinc-300);
+}
+
+.VPDocFooter .title {
+    color: var(--color-ink);
+}
+
+.VPDocAsideOutline .outline-link.active {
+    color: var(--color-ink);
+}
+
+/* Focus rings are purple. */
+:focus-visible {
+    outline-color: var(--color-purple);
+}

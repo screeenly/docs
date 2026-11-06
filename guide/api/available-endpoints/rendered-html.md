@@ -1,59 +1,106 @@
 ---
-description: Learn how to get the rendered HTML of a URL or of your provide HTML snippet.
+description: Get the HTML of a page after its JavaScript ran with POST /api/v1/rendered-html.
 ---
 
 # Rendered HTML
 
-The `/api/v1/renderd-html` API endpoints allows you to generate rendered HTML of a given URL or HTML snippet. You can find a detailed list of all available parameters in the [API reference](/reference/#tag/html).
+`POST /api/v1/rendered-html` loads a URL or your HTML in Chrome, runs its JavaScript and returns the resulting HTML. Use it for pages that build their content in the browser, where a plain HTTP request only returns an empty app shell.
 
-## Create Rendered HTML from URL
+## What you need
 
-The most basic payload to create a rendered HTML of a URL looks like this.
+- An API token ([Authentication](/guide/api/introduction/authentication))
 
-```json
-{
-    "url": "https://example.com"
-}
+## Example request
+
+::: code-group
+
+```bash [curl]
+curl --request POST \
+  --url https://3.screeenly.com/api/v1/rendered-html \
+  --header 'Accept: application/json' \
+  --header 'Authorization: Bearer YOUR_API_TOKEN' \
+  --data url=https://example.com
 ```
 
-The resulting JSON response will contain the rendered HTML. The meta section contains information about your current usage and limits.
+```php [PHP]
+use Illuminate\Support\Facades\Http;
+
+$response = Http::withToken('YOUR_API_TOKEN')
+    ->acceptJson()
+    ->post('https://3.screeenly.com/api/v1/rendered-html', [
+        'url' => 'https://example.com',
+    ]);
+
+$html = $response->json('data.rendered_html');
+```
+
+```js [JavaScript]
+const response = await fetch('https://3.screeenly.com/api/v1/rendered-html', {
+    method: 'POST',
+    headers: {
+        Accept: 'application/json',
+        Authorization: 'Bearer YOUR_API_TOKEN',
+        'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({ url: 'https://example.com' }),
+});
+
+const { data } = await response.json();
+```
+
+```python [Python]
+import requests
+
+response = requests.post(
+    "https://3.screeenly.com/api/v1/rendered-html",
+    headers={"Accept": "application/json", "Authorization": "Bearer YOUR_API_TOKEN"},
+    json={"url": "https://example.com"},
+)
+
+html = response.json()["data"]["rendered_html"]
+```
+
+:::
+
+## Response
 
 ```json
 {
-  "data": {
-    "rendered_html": "<html><head></head><body><h1>Hello World</h1></body></html>"
-  },
-  "meta": {
-    "request_id": null,
-    "usage_limit": {
-      "limit": 10000,
-      "usage": 15,
-      "remaining": 9985,
-      "resets": "2024-07-01T00:00:00+00:00"
+    "data": {
+        "rendered_html": "<html><head><title>Example Domain</title></head><body><h1>Example Domain</h1></body></html>"
+    },
+    "meta": {
+        "request_id": "0195f2a4-6c1e-7a51-9d3b-6c0f1e2a9b47",
+        "usage_limit": {
+            "limit": 100,
+            "usage": 16,
+            "remaining": 84,
+            "resets": "2026-12-01T00:00:00+00:00"
+        }
     }
-  }
 }
 ```
 
-> [!TIP]
-> You can also use the `/api/v1/rendered-html` API to get the rendered HTML of a URL. This can be useful if you want to extract the rendered HTML of a website for further processing. For example, if you need to extract specific information that uses JavaScript to render the content.
+The HTML is in the response itself. There is no file to download.
 
-## Create Rendered HTML from HTML
+## Wait for the content
 
-If you want to create a rendered HTML from a given HTML snippet, you can use the following payload.
+The HTML is read once the page fired its `load` event. Many single page apps load their data after that. Pick one of these options so the content is there:
 
-```json
-{
-    "html": "<html><head></head><body><h1>Hello World</h1></body></html>"
-}
-```
+| Option | Use it when |
+| --- | --- |
+| `wait_for_selector` | You know an element that appears once the content loaded, for example `.product-price`. |
+| `wait_until_network_idle` | The page loads its data with a few requests and then stops. |
+| `delay` | Nothing else works. Wait a fixed number of milliseconds. |
 
----
+Raise `timeout` (10 seconds by default) when you add waits.
 
-As mentioned, these are just a few examples of how you can use the `/api/v1/rendered-html` API. For a full list of available parameters and responses, please refer to the [API reference](/reference/#tag/html).
+## Options
 
-> [!NOTE]
-> The `/api/v1/rendered-html` and `/api/v1/shots` API endpoints are very similar. The main difference is that the `/api/v1/rendered-html` API returns the rendered HTML of a given URL or HTML snippet, while the `/api/v1/shots` API returns a screenshot or PDF of a given URL or HTML snippet.
-> Many of the parameters are the same, so you can use the same payload for both APIs. Note that some parameters like `file_type` are only available in the `/api/v1/shots` API.
+The rendered HTML endpoint accepts the same options as [Screenshots and PDFs](/guide/api/available-endpoints/shots), except those for images and PDFs such as `file_type`, `full_page` or `paper_format`. They are ignored. [All options](/guide/api/available-endpoints/options) marks which options apply.
 
-You can also try out different parameters in our [playground](https://3.screeenly.com/playground). The playground will also build up the API payload for you, so you can easily copy and paste it into your application.
+## Related
+
+- [All options](/guide/api/available-endpoints/options)
+- [Making requests](/guide/api/introduction/)
+- [API reference](/reference/)

@@ -4,9 +4,24 @@ description: All notable changes we've made to screeenly since its relaunch.
 
 # Changelog
 
-::: info
-The latest major or minor release has been a while, but we regularly upgrade underlying systems to their latest versions.
-:::
+## v3.1.0 - 2026-11-15
+
+### New options, caching and request IDs
+
+* New options: `quality`, `wait_for_selector`, `color_scheme`, `disable_images`, `block_urls` and `block_domains`. See [All options](/guide/api/available-endpoints/options).
+* Identical requests of the same account return the stored result for 24 hours, without counting toward your usage. With a plan or credits, use `cache` and `cache_ttl` to control it. See [Caching](/guide/api/introduction/caching).
+* Files are kept for 24 hours instead of 60 minutes.
+* Every request has an ID in the `X-Request-ID` header. Retrying a request with the same ID returns the stored response without counting twice. See [Request IDs and retries](/guide/api/introduction/request-ids).
+* The [MCP server](/guide/mcp/) lets AI agents take screenshots, create PDFs and read rendered HTML.
+* API tokens have abilities: `shot:create` and `shot:read`.
+
+### Free plan and credits
+
+* Every account gets 100 free requests per month, with or without a plan. Plans add their requests on top. The 14-day trial is gone.
+* Accounts without a plan and without credits have [lower limits](/guide/api/introduction/free-plan) for some options and for the request rate.
+* Buy [credits](/guide/api/introduction/credits) for requests above your monthly limit. Credits don't expire.
+* Requests that fail validation (`422`) no longer count toward your monthly usage.
+* API responses include the new `X-Credits-Remaining` header.
 
 ## v3.0.0 - 2020-09-10
 

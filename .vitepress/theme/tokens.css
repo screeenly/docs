@@ -1,0 +1,47 @@
+/**
+ * Synced from screeenly-3 (resources/css/design/tokens.css @ 08a2c630). Do not edit.
+ * Run `npm run sync:design` to update.
+ */
+:root {
+    --font-sans:
+        var(--font-geist, 'Geist'), ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji',
+        'Segoe UI Emoji';
+    --font-display: var(--font-sans);
+    /* Only for the wordmark in the logo, kept from the earlier design. */
+    --font-logo:
+        var(--font-bricolage-grotesque, 'Bricolage Grotesque'), ui-sans-serif, system-ui, sans-serif;
+    --font-mono:
+        var(--font-geist-mono, 'Geist Mono'), ui-monospace, SFMono-Regular, Menlo, monospace;
+
+    --color-paper: #ffffff;
+    --color-subtle: #fafafa;
+    --color-line: #e4e4e7;
+    --color-line-soft: #f0f0f2;
+    --color-muted: #71717a;
+    --color-ink-soft: #52525b;
+    --color-ink: #0b0b0f;
+
+    --color-purple: #6d4aff;
+    --color-purple-tint: #f1eeff;
+    --color-purple-dark: #4b2fd6;
+
+    --color-yellow: #ffd23f;
+    --color-yellow-tint: #fff7d6;
+    --color-yellow-dark: #6b4e00;
+    --color-yellow-icon: #8a6500;
+
+    --color-mint: #35d6a0;
+    --color-mint-tint: #e3f9f0;
+    --color-mint-dark: #0b6b4b;
+
+    --color-pink: #ff8ad0;
+    --color-pink-tint: #ffeaf6;
+    --color-pink-dark: #a3196c;
+    --color-pink-icon: #c0267f;
+
+    --radius-card: 0.875rem;
+    --radius-btn: 0.5625rem;
+
+    --shadow-pop: 0 12px 32px rgb(11 11 15 / 0.08);
+    --shadow-menu: 0 16px 40px rgb(11 11 15 / 0.08);
+}
