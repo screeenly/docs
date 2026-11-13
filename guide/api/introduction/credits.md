@@ -15,7 +15,7 @@ Credits pay for API requests once your [monthly requests](/guide/api/introductio
 - [Test requests](/guide/api/introduction/test-requests), results from the [cache](/guide/api/introduction/caching) and runs in the playground never use credits.
 - While you have at least one credit, the [free plan](/guide/api/introduction/free-plan) limits don't apply, even before your 100 free requests are used up.
 
-When your monthly requests and your credits are both used up, the API returns a `403` error until the next month starts.
+When your monthly requests and your credits are both used up, the API returns a `402` error until the next month starts.
 
 ## Buy credits
 

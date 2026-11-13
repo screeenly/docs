@@ -33,7 +33,7 @@ Screenshots, PDFs and rendered HTML all count the same: one request each.
 
 ## When you reach the limit
 
-Once your monthly requests are used up, each further request uses one [credit](/guide/api/introduction/credits). Without credits, the API returns a `403` error until the next month starts:
+Once your monthly requests are used up, each further request uses one [credit](/guide/api/introduction/credits). Without credits, the API returns a `402` error until the next month starts:
 
 ```json
 {

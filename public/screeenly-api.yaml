@@ -78,6 +78,8 @@ paths:
           $ref: '#/components/responses/RenderException'
         '401':
           $ref: '#/components/responses/AuthenticationException'
+        '402':
+          $ref: '#/components/responses/OutOfCreditsException'
         '403':
           $ref: '#/components/responses/AuthorizationException'
         '409':
@@ -125,6 +127,8 @@ paths:
           $ref: '#/components/responses/RenderException'
         '401':
           $ref: '#/components/responses/AuthenticationException'
+        '402':
+          $ref: '#/components/responses/OutOfCreditsException'
         '403':
           $ref: '#/components/responses/AuthorizationException'
         '409':
@@ -228,8 +232,8 @@ components:
               message:
                 type: string
                 example: 'Unauthenticated.'
-    AuthorizationException:
-      description: The monthly requests and credits are used up, the email address is not verified, the account is blocked, or the token doesn't have the `shot:create` ability.
+    OutOfCreditsException:
+      description: The monthly requests and credits are used up.
       content:
         application/json:
           schema:
@@ -238,6 +242,16 @@ components:
               message:
                 type: string
                 example: 'The monthly API usage limit has been reached (100 out of 100 requests) and there are no credits left. Upgrade your plan or buy credits under https://3.screeenly.com/app/billing/credits. The limit resets at the start of next month.'
+    AuthorizationException:
+      description: The email address is not verified, the account is blocked, or the token doesn't have the `shot:create` ability.
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                example: 'Your email address is not verified.'
     ConflictException:
       description: A request with the same `X-Request-ID` is still running.
       content:

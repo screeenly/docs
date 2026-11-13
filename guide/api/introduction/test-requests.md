@@ -13,7 +13,7 @@ Set `test_request` to `true` and screeenly validates your request and returns a 
 - `/shots` returns a `shot_url` to a placeholder image. `/rendered-html` returns a short placeholder HTML snippet.
 - It doesn't count toward your monthly usage and doesn't use credits.
 - It does count toward the [rate limits](/guide/api/introduction/rate-limit).
-- Once your monthly requests and your credits are used up, test requests return a `403` error like real requests.
+- Once your monthly requests and your credits are used up, test requests return a `402` error like real requests.
 
 ## Example request
 

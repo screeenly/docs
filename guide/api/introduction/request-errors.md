@@ -19,7 +19,8 @@ Send the `Accept: application/json` header. Without it, some errors return a red
 | `400` | The page failed to render or timed out. | Yes | After changing the request |
 | `400` | Invalid `X-Request-ID` header. | No | After fixing the header |
 | `401` | Missing or invalid API token. | No | No |
-| `403` | Monthly requests and credits used up, email not verified, account blocked, or token without `shot:create`. | No | No |
+| `402` | Monthly requests and credits used up. | No | After buying credits, or next month |
+| `403` | Email not verified, account blocked, or token without `shot:create`. | No | No |
 | `409` | A request with the same `X-Request-ID` is still running. | No | Yes, after a few seconds |
 | `422` | The request failed validation. | No | After fixing the request |
 | `429` | Rate limit or too many requests at the same time. | No | Yes, after `Retry-After` |
@@ -65,7 +66,7 @@ See [Troubleshooting](/guide/faq/troubleshooting) for pages that load but look w
 
 The `Authorization` header is missing, isn't in the form `Bearer YOUR_API_TOKEN`, or the token was deleted. Create a new token on the [API Tokens](https://3.screeenly.com/app/api-tokens) page.
 
-## 403: Forbidden
+## 402: Payment required
 
 Your monthly requests and credits are used up:
 
@@ -77,7 +78,7 @@ Your monthly requests and credits are used up:
 
 [Buy credits](/guide/api/introduction/credits) or [upgrade your plan](https://3.screeenly.com/app/billing). Otherwise requests work again at 00:00 UTC on the first day of the next month.
 
-Other messages:
+## 403: Forbidden
 
 | Message | Fix |
 | --- | --- |

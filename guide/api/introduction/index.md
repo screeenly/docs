@@ -134,7 +134,8 @@ See [Caching](/guide/api/introduction/caching) for how to change how long a file
 | `200` | The result came from the [cache](/guide/api/introduction/caching), or the request was a [test request](/guide/api/introduction/test-requests) or a [replay](/guide/api/introduction/request-ids). |
 | `400` | The browser failed to render the page or timed out, or the `X-Request-ID` header is invalid. |
 | `401` | The API token is missing or invalid. |
-| `403` | Your monthly requests and credits are used up, your email address is not verified, your account is blocked, or the token lacks the `shot:create` ability. |
+| `402` | Your monthly requests and credits are used up. |
+| `403` | Your email address is not verified, your account is blocked, or the token lacks the `shot:create` ability. |
 | `409` | A request with the same `X-Request-ID` is still running. |
 | `422` | The request failed validation. |
 | `429` | You hit a rate limit or sent too many requests at the same time. |
